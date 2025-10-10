@@ -1,0 +1,117 @@
+# ==================================================
+# Unreal Engine 5 .gitignore
+# ==================================================
+
+# OS / IDE
+############################
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Compiled data / cache
+############################
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+*.VC.db
+*.opensdf
+*.sdf
+*.sln
+*.xcodeproj
+
+# Logs
+############################
+*.log
+*.tlog
+*.pdb
+
+# Build / Config
+############################
+Build/
+Scripts/
+*.pri
+*.idb
+
+# Crash & backup
+############################
+*.dmp
+*.backup
+*_Backup.*
+
+# Unreal specific
+############################
+# Ignore Auto-generated files
+*.generated.*
+*.Generated.*
+*_manifest.json
+*_manifest.txt
+*.VC.db
+*.sln
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore packaged builds
+WindowsNoEditor/
+LinuxNoEditor/
+MacNoEditor/
+Android_ASTC/
+Android_ETC2/
+Android_DXT/
+iOS/
+HTML5/
+Shipping/
+Development/
+
+# Git LFS candidates (keep track with LFS instead of normal Git)
+############################
+# These can be tracked with Git LFS if needed
+*.uasset
+*.umap
+*.fbx
+*.png
+*.jpg
+*.jpeg
+*.tga
+*.bmp
+*.wav
+*.mp3
+*.ogg
+*.mp4
+# Rider IDE
+.idea/
+*.sln.iml
+
+# CLion / JetBrains
+cmake-build-*/
+
+# Visual Assist
+.vs/
+
+.VA/
+# Automation artifacts
+TestResults/
+*.testlog
+*.coverage
+*.gcno
+*.gcda
+
+# Mac OS metadata
+.AppleDouble
+.LSOverride
+
+# Windows metadata
+ehthumbs.db
+Desktop.ini
+
+# Backup files
+*.bak
+*.old
+*.orig
