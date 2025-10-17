@@ -54,3 +54,5 @@ Development/
 
 # Ignore Starter Content
 Content/StarterContent/
+# Visual Studio キャッシュを除外
+.vs/

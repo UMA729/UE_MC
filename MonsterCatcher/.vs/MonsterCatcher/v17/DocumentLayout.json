@@ -1,12 +1,102 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5F9DCE76-303A-32FA-B5D0-6D325057B8AA}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5F9DCE76-303A-32FA-B5D0-6D325057B8AA}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\MyCharacter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5F9DCE76-303A-32FA-B5D0-6D325057B8AA}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyGameModeBase.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5F9DCE76-303A-32FA-B5D0-6D325057B8AA}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\MyGameModeBase.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5F9DCE76-303A-32FA-B5D0-6D325057B8AA}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5F9DCE76-303A-32FA-B5D0-6D325057B8AA}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\MyCharacter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DAABECAF-03BD-3DD0-9EAD-9AEAE552F6D7}|Intermediate\\ProjectFiles\\UE5.vcxproj|C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source\\Runtime\\Engine\\Private\\Animation\\AnimInstance.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5F9DCE76-303A-32FA-B5D0-6D325057B8AA}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyGameModeBase.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5F9DCE76-303A-32FA-B5D0-6D325057B8AA}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\MyGameModeBase.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MyCharacter.h",
+              "DocumentMoniker": "C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.h",
+              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\MyCharacter.h",
+              "ToolTip": "C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.h*",
+              "RelativeToolTip": "Source\\MonsterCatcher\\MyCharacter.h*",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAwCoAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-17T06:13:10.471Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MyCharacter.cpp",
+              "DocumentMoniker": "C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.cpp",
+              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\MyCharacter.cpp",
+              "ToolTip": "C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.cpp",
+              "RelativeToolTip": "Source\\MonsterCatcher\\MyCharacter.cpp",
+              "ViewState": "AgIAABgAAAAAAAAAAADwvzYAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-17T06:13:09.84Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AnimInstance.cpp",
+              "DocumentMoniker": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source\\Runtime\\Engine\\Private\\Animation\\AnimInstance.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source\\Runtime\\Engine\\Private\\Animation\\AnimInstance.cpp",
+              "ToolTip": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source\\Runtime\\Engine\\Private\\Animation\\AnimInstance.cpp [\u8AAD\u307F\u53D6\u308A\u5C02\u7528]",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source\\Runtime\\Engine\\Private\\Animation\\AnimInstance.cpp [\u8AAD\u307F\u53D6\u308A\u5C02\u7528]",
+              "ViewState": "AgIAAKAAAAAAAAAAAADgv7EAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-17T05:48:20.577Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MyGameModeBase.cpp",
+              "DocumentMoniker": "C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyGameModeBase.cpp",
+              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\MyGameModeBase.cpp",
+              "ToolTip": "C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyGameModeBase.cpp",
+              "RelativeToolTip": "Source\\MonsterCatcher\\MyGameModeBase.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-17T04:53:19.49Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MyGameModeBase.h",
+              "DocumentMoniker": "C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyGameModeBase.h",
+              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\MyGameModeBase.h",
+              "ToolTip": "C:\\Users\\GA2B\\Desktop\\UEProjects\\MonsterCatcher\\Source\\MonsterCatcher\\MyGameModeBase.h",
+              "RelativeToolTip": "Source\\MonsterCatcher\\MyGameModeBase.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-17T04:53:19.4Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
