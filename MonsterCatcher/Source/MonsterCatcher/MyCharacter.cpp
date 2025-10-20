@@ -17,6 +17,13 @@ AMyCharacter::AMyCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
+
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -26,13 +33,15 @@ AMyCharacter::AMyCharacter()
 	// Create a follow camera
 	ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
 	ThirdPersonCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	ThirdPersonCamera->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
 	// FPSカメラ
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCamera->SetupAttachment(GetMesh(), TEXT("head")); // 頭のSocketにくっつける想定
-	FirstPersonCamera->bUsePawnControlRotation = true;
+	FirstPersonCamera->bUsePawnControlRotation = false;
 
 	isPers = false;
+	isRunning = false;
 }
 
 // Called when the game starts or when spawned
@@ -40,6 +49,20 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AMyCharacter::NotifyControllerChanged()
+{
+	Super::NotifyControllerChanged();
+
+	// Add Input Mapping Context
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		}
+	}
 }
 
 // Called every frame
@@ -55,17 +78,20 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	if (UEnhancedInputComponent* EnhancedInputConponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputConponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputConponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
-		EnhancedInputConponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyCharacter::Move);
-
-		EnhancedInputConponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
-
-		EnhancedInputConponent->BindAction(PersAction, ETriggerEvent::Triggered, this, &AMyCharacter::Pers);
-
-		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AMyCharacter::Run);
-		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AMyCharacter::StopRun);
+		EnhancedInputConponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);				//ジャンプ
+		EnhancedInputConponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);		//ジャンプ停止
+																														
+		EnhancedInputConponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyCharacter::Move);			//移動
+																														
+		EnhancedInputConponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);			//視点移動
+																														
+		EnhancedInputConponent->BindAction(ZoomInAction, ETriggerEvent::Triggered, this, &AMyCharacter::ZoomIn);		//カメラズームイン
+		EnhancedInputConponent->BindAction(ZoomOutAction, ETriggerEvent::Triggered, this, &AMyCharacter::ZoomOut);		//カメラズームアウト
+																														
+		EnhancedInputConponent->BindAction(PersAction, ETriggerEvent::Started, this, &AMyCharacter::Pers);				//視点切り替え
+																														
+		EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AMyCharacter::Run);				//ダッシュ
+		EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AMyCharacter::StopRun);			//ダッシュ停止
 	}
 }
 
@@ -101,10 +127,24 @@ void AMyCharacter::Look(const FInputActionValue& Value)
 	{
 		//マウスの動きにあわせて視点に反映
 		AddControllerYawInput(LookAxisVector.X);
-		AddControllerPitchInput(LookAxisVector.Y);
+		AddControllerPitchInput(-LookAxisVector.Y);
 	}
 
 }
+
+void AMyCharacter::ZoomIn(const FInputActionValue& Value)
+{
+	if (CameraBoom->TargetArmLength > 200)
+	CameraBoom->TargetArmLength -= 30;
+}
+
+void AMyCharacter::ZoomOut(const FInputActionValue& Value)
+{
+	if (CameraBoom->TargetArmLength < 600)
+	CameraBoom->TargetArmLength += 30;
+}
+
+
 void AMyCharacter::Pers(const FInputActionValue& Value)
 {
 	isPers = !isPers;
@@ -120,8 +160,15 @@ void AMyCharacter::Pers(const FInputActionValue& Value)
 		FirstPersonCamera->SetActive(false);
 	}
 }
-//
-//void AMyCharacter::Run(const FInputActionValue& Value)
-//{
-//
-//}
+
+void AMyCharacter::Run(const FInputActionValue& Value)
+{
+	isRunning = true;
+	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
+}
+
+void AMyCharacter::StopRun(const FInputActionValue& Value)
+{
+	isRunning = false;
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+}

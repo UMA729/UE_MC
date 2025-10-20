@@ -20,13 +20,16 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
-
+	
+	/**三人称視点用カメラ*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* ThirdPersonCamera;
 
+	/**一人称視点用カメラ*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCamera;
 
+	/**Input Mapping Context*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 
@@ -42,13 +45,23 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* RunAction;*/
+	/**ZoomIn Action*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ZoomInAction;
+
+	/**ZoomOut Action*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ZoomOutAction;
+	
+	/**Run Input Action*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* RunAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PersAction;
 
-	bool isPers;
+	bool isPers;		//視点フラグ
+	bool isRunning;		//ダッシュフラグ
 	
 public:
 	// Sets default values for this character's properties
@@ -58,16 +71,19 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void Move(const FInputActionValue& Value);
+	virtual void NotifyControllerChanged() override;
 
-	void Jump(const FInputActionValue& Value);
+	void Move(const FInputActionValue& Value);
 
 	void Look(const FInputActionValue& Value);
 
+	void ZoomIn(const FInputActionValue& Value);
+	void ZoomOut(const FInputActionValue& Value);
+
 	void Pers(const FInputActionValue& Value);
 
-	/*void Run(const FInputActionValue& Value);
-	void StopRun(const FInputActionValue& Value);*/
+	void Run(const FInputActionValue& Value);
+	void StopRun(const FInputActionValue& Value);
 
 public:	
 	// Called every frame
