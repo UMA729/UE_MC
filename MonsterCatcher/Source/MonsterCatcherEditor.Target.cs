@@ -11,5 +11,6 @@ public class MonsterCatcherEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_5;
 		ExtraModuleNames.Add("MonsterCatcher");
-	}
+        ExtraModuleNames.Add("Module");//’Ç‰Á
+    }
 }
