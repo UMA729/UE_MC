@@ -1,58 +1,25 @@
-# ========================================
-# Unreal Engine 5 .gitignore (最新版)
-# ========================================
+# =========================================
+# Unreal Engine 5 - Recommended .gitignore
+# =========================================
 
-# OS / IDE
-.DS_Store
-Thumbs.db
+# Project-specific files
+Saved/
+Intermediate/
+DerivedDataCache/
+.vs/
 .vscode/
-.idea/
+Binaries/
+Build/Windows/
+Build/Linux/
+Build/Mac/
+
+# Configuration backups or user files
 *.suo
 *.user
-*.userosscache
-*.sln.docstates
-
-# Compiled / cache
-Binaries/
-DerivedDataCache/
-Intermediate/
-Saved/
-*.VC.db
-*.VC.db-wal
-*.VC.db-shm
-*.opensdf
-*.sdf
-*.sln
-*.xcodeproj
-
-# Logs / temp
+*.userprefs
 *.log
 *.tlog
-*.dmp
-*.tmp
-*.temp
-*_Backup.*
-filelist.bin
-
-# Unreal-specific auto-generated files
-*.generated.*
-*.Generated.*
-*_manifest.json
-*_manifest.txt
-
-# Packaged builds
-WindowsNoEditor/
-LinuxNoEditor/
-MacNoEditor/
-Android_ASTC/
-Android_ETC2/
-Android_DXT/
-iOS/
-HTML5/
-Shipping/
-Development/
-
-# Ignore Starter Content
-Content/StarterContent/
-# Visual Studio キャッシュを除外
-.vs/
+*.obj
+*.pdb
+*.ipch
+*.*
