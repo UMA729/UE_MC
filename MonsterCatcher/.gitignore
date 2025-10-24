@@ -22,4 +22,6 @@ Build/Mac/
 *.obj
 *.pdb
 *.ipch
-*.*
+
+# Ignore Starter Content
+Content/StarterContent/

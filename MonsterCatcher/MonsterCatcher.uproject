@@ -9,10 +9,13 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		},
-	{
+		{
 			"Name": "Module",
 			"Type": "Editor",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"UnrealEd"
+			]
 		}
 	],
 	"Plugins": [
