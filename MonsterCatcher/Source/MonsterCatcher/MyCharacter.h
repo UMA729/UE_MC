@@ -61,14 +61,28 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	UInputAction* PersAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* RopeAction;
+	UInputAction* GrappleAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
-	class UCableComponent* GrappleCable;
+	class UCableComponent*GrappleCable;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
+	bool isGrappling;	//グラップルフラグ
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
+	USceneComponent* GrappleAnchor;
 
 	bool isPers;		//視点フラグ
 	bool isRunning;		//ダッシュフラグ
-	bool isGrappling;	//グラップル
+
+	// Grapple状態
+	bool bIsFiringGrapple = false; // ケーブルを伸ばしている最中
+	FVector GrappleStart;  // ケーブル発射開始位置
+	FVector GrappleDir;    // ケーブル発射方向
+	float CurrentCableLength; // ケーブルの現在長さ
+	float TargetCableLength;  // ケーブルの目標長さ
+	float Distance;
+	FVector GrabPoint;
 	
 public:
 	// Sets default values for this character's properties
