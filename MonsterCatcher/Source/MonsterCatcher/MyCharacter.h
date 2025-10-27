@@ -60,8 +60,15 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PersAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* RopeAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
+	class UCableComponent* GrappleCable;
+
 	bool isPers;		//視点フラグ
 	bool isRunning;		//ダッシュフラグ
+	bool isGrappling;	//グラップル
 	
 public:
 	// Sets default values for this character's properties
@@ -84,6 +91,9 @@ protected:
 
 	void Run(const FInputActionValue& Value);
 	void StopRun(const FInputActionValue& Value);
+
+	void Grappling(const FInputActionValue& Value);
+	void StopGrapple(const FInputActionValue& Value);
 
 public:	
 	// Called every frame

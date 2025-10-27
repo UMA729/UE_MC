@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "MyCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -10,8 +9,10 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "CableComponent.h"
+#include "DrawDebugHelpers.h"
 
-// Sets default values
+// コンストラクタ
 AMyCharacter::AMyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -40,11 +41,22 @@ AMyCharacter::AMyCharacter()
 	FirstPersonCamera->SetupAttachment(GetMesh(), TEXT("head")); // 頭のSocketにくっつける想定
 	FirstPersonCamera->bUsePawnControlRotation = false;
 
-	isPers = false;
+	GrappleCable = CreateDefaultSubobject<UCableComponent>(TEXT("Grapple Cable"));
+	GrappleCable->SetupAttachment(GetMesh(), TEXT("RightHand"));
+
+	GrappleCable->CableLength = 2000.0f;
+	GrappleCable->NumSegments = 20;
+	GrappleCable->CableWidth = 5.0f;
+	GrappleCable->bEnableCollision = true;
+	GrappleCable->SetVisibility(false); // 初期状態では非表示
+
+
+	isPers = false;			//falseの場合は三人称
 	isRunning = false;
+	isGrappling = false;
 }
 
-// Called when the game starts or when spawned
+//最初に一回呼ぶ
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -65,13 +77,14 @@ void AMyCharacter::NotifyControllerChanged()
 	}
 }
 
-// Called every frame
+// メインループ
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
-// Called to bind functionality to input
+// キーが押されたときに呼ばれる
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -92,6 +105,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 																														
 		EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AMyCharacter::Run);				//ダッシュ
 		EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AMyCharacter::StopRun);			//ダッシュ停止
+
+		EnhancedInputConponent->BindAction(RopeAction, ETriggerEvent::Triggered, this, &AMyCharacter::Grappling);		//ロープ発射
+		EnhancedInputConponent->BindAction(RopeAction, ETriggerEvent::Completed, this, &AMyCharacter::StopGrapple);		//ロープ停止
 	}
 }
 
@@ -163,6 +179,7 @@ void AMyCharacter::Pers(const FInputActionValue& Value)
 
 void AMyCharacter::Run(const FInputActionValue& Value)
 {
+
 	isRunning = true;
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
 }
@@ -171,4 +188,66 @@ void AMyCharacter::StopRun(const FInputActionValue& Value)
 {
 	isRunning = false;
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+}
+
+void AMyCharacter::Grappling(const FInputActionValue& Value)
+{
+
+		UE_LOG(LogTemp, Log, TEXT("hasiru"));
+	if (!isGrappling)
+	{
+
+		isGrappling = true;
+
+		FVector Start = FVector(0.f, 0.f, 0.f);
+		FVector End = FVector(0.f, 0.f, 0.f);
+		// ① カメラ位置と向きを取得
+		if (!isPers)
+		{
+			Start = ThirdPersonCamera->GetComponentLocation();
+			End = Start + ThirdPersonCamera->GetForwardVector() * 2000.0f;
+		}
+		else
+		{
+			Start = ThirdPersonCamera->GetComponentLocation();
+			End = Start + ThirdPersonCamera->GetForwardVector() * 2000.0f;
+		}
+		// ② ライントレースの設定
+		FHitResult Hit;
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this); // 自分自身は無視
+
+		// ③ ライントレース実行
+		bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params);
+
+		// ④ ヒットしたら移動処理
+		if (bHit)
+		{
+			DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1.0f, 0, 2.0f);
+
+			GrappleCable->SetVisibility(true);
+			GrappleCable->SetWorldLocation(Start);
+			GrappleCable->SetAttachEndTo(Hit.GetActor(), NAME_None, NAME_None); // ヒットしたActorに接続
+
+			float Distance = FVector::Distance(Start, Hit.ImpactPoint);
+			GrappleCable->CableLength = Distance;
+
+			// プレイヤーを飛ばす
+			FVector LaunchDirection = (Hit.ImpactPoint - GetActorLocation()).GetSafeNormal();
+			LaunchCharacter(LaunchDirection * 1500.0f, true, true);
+		}
+	}
+}
+
+void AMyCharacter::StopGrapple(const FInputActionValue& Value)
+{
+	// 必要なら、Grapple中フラグなどを false に
+	isGrappling = false; // ← 使ってるなら
+
+	// ケーブルを非表示にする
+	if (GrappleCable)
+	{
+		GrappleCable->SetVisibility(false);
+		GrappleCable->SetAttachEndTo(nullptr, NAME_None, NAME_None); // 接続解除
+	}
 }
