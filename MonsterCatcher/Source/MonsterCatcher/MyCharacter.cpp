@@ -57,6 +57,9 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
+
 	if (isPers)
 	{
 		FirstPersonCamera->SetActive(true);
@@ -113,6 +116,7 @@ void AMyCharacter::Tick(float DeltaTime)
 			CurrentCableLength = TargetCableLength;
 
 			GrappleAnchor->SetWorldLocation(GrabPoint);
+			GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
 		}
 	}
 
@@ -286,7 +290,6 @@ void AMyCharacter::Grappling(const FInputActionValue& Value)
 		GrappleAnchor = NewObject<USceneComponent>(this);
 		GrappleAnchor->RegisterComponent();
 	}
-	GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
 
 }
 
