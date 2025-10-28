@@ -13,7 +13,4 @@ UCLASS()
 class MONSTERCATCHER_API UUI_UserWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
-protected:
-	virtual void BeginPlay() override;
 };

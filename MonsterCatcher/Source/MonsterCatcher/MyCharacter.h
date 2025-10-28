@@ -68,6 +68,9 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
 	bool isGrappling;	//グラップルフラグ
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
+	bool bIsFiringGrapple; // ケーブルを伸ばしている最中
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
 	USceneComponent* GrappleAnchor;
@@ -76,13 +79,12 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	bool isRunning;		//ダッシュフラグ
 
 	// Grapple状態
-	bool bIsFiringGrapple = false; // ケーブルを伸ばしている最中
 	FVector GrappleStart;  // ケーブル発射開始位置
 	FVector GrappleDir;    // ケーブル発射方向
+	FVector GrabPoint;
 	float CurrentCableLength; // ケーブルの現在長さ
 	float TargetCableLength;  // ケーブルの目標長さ
 	float Distance;
-	FVector GrabPoint;
 	
 public:
 	// Sets default values for this character's properties
@@ -109,6 +111,7 @@ protected:
 	void Grappling(const FInputActionValue& Value);
 	void StopGrapple(const FInputActionValue& Value);
 
+	void ResetGrapple();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
