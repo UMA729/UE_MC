@@ -110,8 +110,6 @@ protected:
 
 	void Grappling(const FInputActionValue& Value);
 	void StopGrapple(const FInputActionValue& Value);
-
-	void ResetGrapple();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
