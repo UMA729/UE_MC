@@ -27,10 +27,10 @@ AMyCharacter::AMyCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
 
 	// カメラアームを作る (pulls in towards the player if there is a collision)
-	//CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	//CameraBoom->SetupAttachment(RootComponent);
-	//CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
-	//CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 0.0f; // The camera follows at this distance behind the character	
+	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// TPSカメラ
 	//ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
@@ -39,16 +39,14 @@ AMyCharacter::AMyCharacter()
 
 	// FPSカメラ
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FirstPersonCamera->SetupAttachment(RootComponent); // 頭のSocketにくっつける想定
-	FirstPersonCamera->bUsePawnControlRotation = false;
+	FirstPersonCamera->SetupAttachment(CameraBoom); // 頭のSocketにくっつける想定
 
 	//グラップルケーブル
 	GrappleCable = CreateDefaultSubobject<UCableComponent>(TEXT("GrappleCable"));
-	GrappleCable->SetupAttachment(GetMesh(), TEXT("RightHand"));
 	GrappleCable->SetVisibility(false);
 
-	//GrappleCable->bEnableStiffness = true;
-	GrappleCable->bEnableCollision = false;
+	//GrappleCable->bEnableStiffness = true;	//張力を有効
+	GrappleCable->bEnableCollision = false;		//衝突判定を切る
 	GrappleCable->NumSegments = 10;
 	GrappleCable->SolverIterations = 16;
 
@@ -62,6 +60,8 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();	
+
+	GrappleCable->SetupAttachment(GetMesh(), FName("RightHand"));
 
 	/*if (isPers)
 	{
@@ -95,19 +95,22 @@ void AMyCharacter::NotifyControllerChanged()
 	}
 }
 
-// Called every frame
+//毎フレーム更新
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	// ケーブル飛翔中（伸ばし中）
 	if (bIsFiringGrapple && GrappleAnchor)
 	{
+		//ケーブルの位置を更新
 		GrappleCable->SetWorldLocation(GrappleStart);
 
 		float FireSpeed = 4000.f; // ケーブル伸びる速度
-		CurrentCableLength = FMath::Min(CurrentCableLength + FireSpeed * DeltaTime, TargetCableLength);
+		CurrentCableLength = FMath::Min(CurrentCableLength + FireSpeed * DeltaTime, TargetCableLength);//線形補間
 
+		//線形補間を元にケーブルを伸ばす
 		FVector CableEnd = GrappleStart + GrappleDir * CurrentCableLength;
+		//接着地点
 		GrappleAnchor->SetWorldLocation(CableEnd);
 
 		// 目標長さに達したら固定（命中済みなのでここで切り替え）
@@ -201,19 +204,21 @@ void AMyCharacter::Look(const FInputActionValue& Value)
 
 }
 
+//ズームイン
 void AMyCharacter::ZoomIn(const FInputActionValue& Value)
 {
 	if (CameraBoom->TargetArmLength > 200)
 	CameraBoom->TargetArmLength -= 30;
 }
 
+//ズームアウト
 void AMyCharacter::ZoomOut(const FInputActionValue& Value)
 {
 	if (CameraBoom->TargetArmLength < 600)
 	CameraBoom->TargetArmLength += 30;
 }
 
-
+//視点切り替え
 void AMyCharacter::Pers(const FInputActionValue& Value)
 {
 	isPers = !isPers;
@@ -230,18 +235,21 @@ void AMyCharacter::Pers(const FInputActionValue& Value)
 	}
 }
 
+//ダッシュ
 void AMyCharacter::Run(const FInputActionValue& Value)
 {
 	isRunning = true;
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
 }
 
+//ダッシュ停止
 void AMyCharacter::StopRun(const FInputActionValue& Value)
 {
 	isRunning = false;
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 }
 
+//グラップル
 void AMyCharacter::Grappling(const FInputActionValue& Value)
 {
 	if (isGrappling || bIsFiringGrapple) return;
@@ -261,10 +269,13 @@ void AMyCharacter::Grappling(const FInputActionValue& Value)
 	FCollisionQueryParams Params;	//コリジョン判定を受け取る
 	Params.AddIgnoredActor(this);	//
 
+	//オブジェクトを探すレイ
 	bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, GrappleStart, TraceEnd, ECC_Visibility, Params);
 
-	DrawDebugLine(GetWorld(), GrappleStart, GrabPoint, FColor::Green, false, 3.0f, 0, 2.0f);
+	//レイのデバッグ
+	DrawDebugLine(GetWorld(), GrappleStart, TraceEnd, FColor::Green, false, 3.0f, 0, 2.0f);
 
+	//レイがヒットすると入る
 	if (bHit)
 	{
 		// Anchor（ケーブルの終端）を作成して命中位置に固定
@@ -273,9 +284,10 @@ void AMyCharacter::Grappling(const FInputActionValue& Value)
 			GrappleAnchor = NewObject<USceneComponent>(this);
 			GrappleAnchor->RegisterComponent();
 		}
-		GrappleAnchor->SetWorldLocation(Hit.ImpactPoint);
+		//グラップルワイヤーの終点を接着地点へ
 		GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
 
+		//接着地点の座標を取得
 		GrabPoint = Hit.ImpactPoint;
 
 		// ケーブルを段階的に伸ばす準備
@@ -290,6 +302,7 @@ void AMyCharacter::Grappling(const FInputActionValue& Value)
 	}
 }
 
+//グラップル停止
 void AMyCharacter::StopGrapple(const FInputActionValue& Value)
 {
 	if (!isGrappling && !bIsFiringGrapple) return;
