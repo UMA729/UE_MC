@@ -86,6 +86,12 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	float TargetCableLength;  // ケーブルの目標長さ
 	float Distance;
 	
+	// レイの現在位置（ケーブル先端）
+	FVector GrappleTip;
+
+	// レイが命中したか
+	bool bHasHitTarget = false;
+
 public:
 	// Sets default values for this character's properties
 	AMyCharacter();
