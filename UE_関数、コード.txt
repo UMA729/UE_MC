@@ -1,0 +1,10 @@
+ComponentName = GetMesh()->GetSocketLocation(TEXT("ボーン名"));//そのボーンの位置にコンポーネントをアタッチすることができる
+ComponentName->SetupAttachment(GetMesh(), TEXT("ボーン名"));//初期化の場合こっち
+
+ComponentName->GetComponentLocation()//コンポーネントの位置を持ってくる
+
+ComponentName->GetForwardVector()//コンポーネントの現在の向きを持ってくる
+
+SetActorLocation(FVector);//アクターの位置を引数の値と同じにする
+
+Destroy();//自身のアクタを破棄する

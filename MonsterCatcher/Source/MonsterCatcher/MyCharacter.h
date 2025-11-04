@@ -79,9 +79,11 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	bool isRunning;		//ダッシュフラグ
 
 	// Grapple状態
-	FVector GrappleStart;  // ケーブル発射開始位置
+	FVector GrappleStart;  // レイ発射開始位置
+	FVector CableStart;		//ケーブル発射位置
 	FVector GrappleDir;    // ケーブル発射方向
 	FVector GrabPoint;
+	float InitialCableLength;
 	float CurrentCableLength; // ケーブルの現在長さ
 	float TargetCableLength;  // ケーブルの目標長さ
 	float Distance;

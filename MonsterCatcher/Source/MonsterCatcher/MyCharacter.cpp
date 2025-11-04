@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "CableComponent.h"
 #include "DrawDebugHelpers.h"
+#include "GoalActor.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -25,6 +26,7 @@ AMyCharacter::AMyCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 
 	// カメラアームを作る (pulls in towards the player if there is a collision)
 	//CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -43,13 +45,16 @@ AMyCharacter::AMyCharacter()
 
 	//グラップルケーブル
 	GrappleCable = CreateDefaultSubobject<UCableComponent>(TEXT("GrappleCable"));
-	GrappleCable->SetupAttachment(FirstPersonCamera);
+	GrappleCable->SetupAttachment(GetMesh(), TEXT("RightHand"));
 	GrappleCable->SetVisibility(false);
-
+	
 	//GrappleCable->bEnableStiffness = true;	//張力を有効
-	GrappleCable->bEnableCollision = false;		//衝突判定を切る
+	GrappleCable->bEnableCollision = true;		//衝突判定を切る
 	GrappleCable->NumSegments = 10;
 	GrappleCable->SolverIterations = 16;
+	// ケーブルは全員に見せたい（特にプレイヤーにも）
+	GrappleCable->SetOwnerNoSee(false);
+	GrappleCable->SetOnlyOwnerSee(false);
 
 	//isPers = true;
 	isRunning = false;
@@ -61,6 +66,8 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();	
+
+	GetMesh()->HideBoneByName(FName("head"), EPhysBodyOp::PBO_None);
 
 	/*if (isPers)
 	{
@@ -78,12 +85,12 @@ void AMyCharacter::BeginPlay()
 			ThirdPersonCamera->SetActive(true);
 		}
 	}*/
-	if (GrappleCable && FirstPersonCamera)
+	/*if (GrappleCable && FirstPersonCamera)
 	{
 		GrappleCable->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
 		GrappleCable->SetRelativeLocation(FVector::ZeroVector);
 		GrappleCable->SetRelativeRotation(FRotator::ZeroRotator);
-	}
+	}*/
 }
 
 void AMyCharacter::NotifyControllerChanged()
@@ -108,7 +115,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	if (bIsFiringGrapple)
 	{
 		// 先端を伸ばす
-		float FireSpeed = 8000.f;
+		float FireSpeed = 4000.f;
 		CurrentCableLength += FireSpeed * DeltaTime;
 
 		//FVector AdjustedDir = GrappleDir;
@@ -118,38 +125,62 @@ void AMyCharacter::Tick(float DeltaTime)
 		//ここでXが+されてしまうのが原因 == ×
 		GrappleTip = GrappleStart + GrappleDir * CurrentCableLength;
 
-		UE_LOG(LogTemp, Warning, TEXT("%f,%f,%f"), GrappleTip.X, GrappleTip.Y, GrappleTip.Z);
+		//UE_LOG(LogTemp, Warning, TEXT("%f,%f,%f"), GrappleTip.X, GrappleTip.Y, GrappleTip.Z);
 		// レイを都度飛ばす（先端まで）
-		FHitResult Hit;
-		FCollisionQueryParams Params;
-		Params.AddIgnoredActor(this);
+		//グラップル天井用レイ
+		FHitResult GraHit;
+		FCollisionQueryParams GrappleParams;
+		GrappleParams.AddIgnoredActor(this);
+		FCollisionObjectQueryParams  GraObjParams;
+		GraObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel1);
+		//ギミック用レイ
+		FHitResult GimHit;
+		FCollisionQueryParams GimmickParams;
+		GimmickParams.AddIgnoredActor(this);
+		FCollisionObjectQueryParams  GimObjParams;
+		GimObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel2);
 
-		bool bHit = GetWorld()->LineTraceSingleByChannel(
-			Hit,
+		bool gHit = GetWorld()->LineTraceSingleByObjectType(
+			GraHit,
 			GrappleStart,
 			GrappleTip,
-			ECC_Visibility,
-			Params
+			GraObjParams,
+			GrappleParams
 		);
 
+		bool bHit = GetWorld()->LineTraceSingleByObjectType(
+			GimHit,
+			GrappleStart,
+			GrappleTip,
+			GimObjParams,
+			GimmickParams
+		);
+		
+		if (bHit)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("HitActor: %s"), *GimHit.GetActor()->GetName());
+		}
+
 		// 視覚確認用ライン
-		DrawDebugLine(GetWorld(), GrappleStart, GrappleTip, FColor::Green, false, -1.0f, 0, 2.0f);
+		//DrawDebugLine(GetWorld(), GrappleStart, GrappleTip, FColor::Green, false, -1.0f, 0, 2.0f);
 
 		// ケーブルの先端位置更新
-		GrappleCable->SetWorldLocation(GrappleStart);
+		if (!gHit)
+			GrappleCable->SetWorldLocation(GrappleStart);
+
 
 		if (!bHasHitTarget)
 		{
+
 			// まだ当たっていない間はケーブルの終点を先端に追従
 			if (!GrappleAnchor)
 			{
 				GrappleAnchor = NewObject<USceneComponent>(this);
 				GrappleAnchor->RegisterComponent();
 				GrappleAnchor->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
-				
 			}
 			GrappleAnchor->SetWorldLocation(GrappleTip);
-			GrappleStart = FirstPersonCamera->GetComponentLocation();
+			GrappleStart = GrappleCable->GetComponentLocation();
 			GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
 
 		}
@@ -157,10 +188,23 @@ void AMyCharacter::Tick(float DeltaTime)
 		// 命中した瞬間
 		if (bHit && !bHasHitTarget)
 		{
+			if (AActor* HitActor = GimHit.GetActor())
+			{
+				if (AGoalActor* LeverActor = Cast<AGoalActor>(HitActor))
+				{
+					LeverActor->OpenGoal();
+				}
+			}
+		}
+		if (gHit && !bHasHitTarget)
+		{
+
+			GrappleCable->SetWorldLocation(CableStart);
+
 			GrappleAnchor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 
 			bHasHitTarget = true;
-			GrabPoint = Hit.ImpactPoint;
+			GrabPoint = GraHit.ImpactPoint;
 			GrappleAnchor->SetWorldLocation(GrabPoint);
 
 			TargetCableLength = FVector::Distance(GrappleStart, GrabPoint);
@@ -169,7 +213,7 @@ void AMyCharacter::Tick(float DeltaTime)
 			bIsFiringGrapple = false;
 			isGrappling = true;
 
-			UE_LOG(LogTemp, Warning, TEXT("Grapple Hit: %s"), *GrabPoint.ToString());
+			//UE_LOG(LogTemp, Warning, TEXT("Grapple Hit: %s"), *GrabPoint.ToString());
 		}
 
 		// 一定距離まで伸ばしたのに当たらなかったらリセット
@@ -189,17 +233,20 @@ void AMyCharacter::Tick(float DeltaTime)
 	// 振り子物理処理
 	if (isGrappling)
 	{
-		float MinCableLength = 500.f;
-		CurrentCableLength = FMath::Max(CurrentCableLength - 3000.f * DeltaTime, MinCableLength);
+
+		float MinCableLength = 300.f;
+		CurrentCableLength = FMath::Max(CurrentCableLength - (1000.f*1000) * (DeltaTime*10), MinCableLength);
+
 
 		FVector ActorLoc = GetActorLocation();
 		FVector ToAnchor = GrabPoint - ActorLoc;
+		float DistanceToAnchor = ToAnchor.Size();
 		FVector RopeDir = ToAnchor.GetSafeNormal();
 
 		FVector CorrectedPos = GrabPoint - RopeDir * CurrentCableLength;
 		FVector Correction = CorrectedPos - ActorLoc;
 
-		GetCharacterMovement()->AddForce(Correction * 800.f);
+		GetCharacterMovement()->AddForce(Correction * 900.f);
 		GetCharacterMovement()->AddForce(FVector(0, 0, -980.f * GetCharacterMovement()->Mass));
 
 		FVector Velocity = GetCharacterMovement()->Velocity;
@@ -207,6 +254,33 @@ void AMyCharacter::Tick(float DeltaTime)
 		FVector TangentialVelocity = Velocity - RopeDir * SpeedAlongRope;
 		GetCharacterMovement()->Velocity = TangentialVelocity;
 	}
+
+	// 振り子物理処理 実験
+	//if (isGrappling)
+	//{
+	//	FVector ActorLoc = GetActorLocation();
+	//	FVector ToAnchor = GrabPoint - ActorLoc;
+	//	float DistanceToAnchor = ToAnchor.Size();
+	//	FVector RopeDir = ToAnchor.GetSafeNormal();
+
+	//	// ロープの長さを常に現在の距離に追従させる
+	//	CurrentCableLength = DistanceToAnchor;
+
+	//	// ロープの張力補正（軽く引き戻すように）
+	//	FVector CorrectedPos = GrabPoint - RopeDir * CurrentCableLength;
+	//	FVector Correction = CorrectedPos - ActorLoc;
+	//	GetCharacterMovement()->AddForce(Correction * 800.f);
+
+	//	// 重力を加える
+	//	GetCharacterMovement()->AddForce(FVector(0, 0, -980.f * GetCharacterMovement()->Mass));
+
+	//	// ロープ方向の速度制限を弱める（完全固定だと動けない）
+	//	FVector Velocity = GetCharacterMovement()->Velocity;
+	//	float SpeedAlongRope = FVector::DotProduct(Velocity, RopeDir);
+	//	FVector TangentialVelocity = Velocity - RopeDir * SpeedAlongRope * 0.3; // 0.0～1.0で調整
+	//	GetCharacterMovement()->Velocity = TangentialVelocity;
+	//}
+
 }
 
 // Called to bind functionality to input
@@ -228,8 +302,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 																														
 		//EnhancedInputConponent->BindAction(PersAction, ETriggerEvent::Started, this, &AMyCharacter::Pers);				//視点切り替え
 																														
-		EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AMyCharacter::Run);				//ダッシュ
-		EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AMyCharacter::StopRun);
+		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AMyCharacter::Run);				//ダッシュ
+		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AMyCharacter::StopRun);
 
 		EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Triggered, this, &AMyCharacter::Grappling);			//ダッシュ停止
 		EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Completed, this, &AMyCharacter::StopGrapple);			//ダッシュ停止
@@ -265,11 +339,11 @@ void AMyCharacter::Look(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
+		float LookSensitivity = 0.5f;
 		//マウスの動きにあわせて視点に反映
-		AddControllerYawInput(LookAxisVector.X);
-		AddControllerPitchInput(-LookAxisVector.Y);
+		AddControllerYawInput(LookAxisVector.X * LookSensitivity);
+		AddControllerPitchInput(-LookAxisVector.Y * LookSensitivity);
 	}
-
 }
 
 //ズームイン
@@ -327,6 +401,7 @@ void AMyCharacter::Grappling(const FInputActionValue& Value)
 	bHasHitTarget = false;
 
 	GrappleStart = FirstPersonCamera->GetComponentLocation();
+	CableStart = GetMesh()->GetSocketLocation(TEXT("RightHand"));
 	GrappleDir = FirstPersonCamera->GetForwardVector();
 
 	GrappleTip = GrappleStart; // 先端はまだカメラ位置から

@@ -9,7 +9,8 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"UMG"
+				"UMG",
+				"Engine"
 			]
 		},
 		{
@@ -28,6 +29,10 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "Text3D",
+			"Enabled": true
 		}
 	]
 }
