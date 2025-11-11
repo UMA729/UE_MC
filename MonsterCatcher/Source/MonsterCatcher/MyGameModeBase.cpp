@@ -9,7 +9,7 @@
 
 AMyGameModeBase::AMyGameModeBase()
 {
-	static ConstructorHelpers::FClassFinder<AMyCharacter>PlayerBPClass(TEXT("/Game/Character/BluePrints/BP_MyCharacter"));
+	static ConstructorHelpers::FClassFinder<AMyCharacter>PlayerBPClass(TEXT("/Game/BluePrints/Character/BP_MyCharacter"));
 
 	if (PlayerBPClass.Class != NULL)
 	{
