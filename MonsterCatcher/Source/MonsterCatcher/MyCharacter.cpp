@@ -29,10 +29,10 @@ AMyCharacter::AMyCharacter()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 
 	// カメラアームを作る (pulls in towards the player if there is a collision)
-	//CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	//CameraBoom->SetupAttachment(RootComponent);
-	//CameraBoom->TargetArmLength = 0.0f; // The camera follows at this distance behind the character	
-	//CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 0.0f; // The camera follows at this distance behind the character	
+	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// TPSカメラ
 	//ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
@@ -41,7 +41,7 @@ AMyCharacter::AMyCharacter()
 
 	// FPSカメラ
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FirstPersonCamera->SetupAttachment(RootComponent); // 頭のSocketにくっつける想定
+	FirstPersonCamera->SetupAttachment(CameraBoom); // 頭のSocketにくっつける想定
 
 	//グラップルケーブル
 	GrappleCable = CreateDefaultSubobject<UCableComponent>(TEXT("GrappleCable"));
@@ -177,8 +177,8 @@ void AMyCharacter::Tick(float DeltaTime)
 			{
 				GrappleAnchor = NewObject<USceneComponent>(this);
 				GrappleAnchor->RegisterComponent();
-				GrappleAnchor->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
 			}
+			GrappleAnchor->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
 			GrappleAnchor->SetWorldLocation(GrappleTip);
 			GrappleStart = GrappleCable->GetComponentLocation();
 			GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
