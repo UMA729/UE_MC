@@ -23,11 +23,11 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	
 	/**三人称視点用カメラ*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* ThirdPersonCamera;
+	UCameraComponent* ThirdPersonCamera;
 
 	/**一人称視点用カメラ*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FirstPersonCamera;
+	UCameraComponent* FirstPersonCamera;
 
 	/**Input Mapping Context*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
