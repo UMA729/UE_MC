@@ -27,8 +27,6 @@ class MONSTERCATCHER_API AThrowKnifeActor : public AActor
 
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 public:	
 	// Sets default values for this actor's properties

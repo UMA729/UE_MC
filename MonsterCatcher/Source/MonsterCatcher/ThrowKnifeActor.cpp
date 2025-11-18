@@ -26,7 +26,7 @@ AThrowKnifeActor::AThrowKnifeActor()
 	ProjectileMovement->MaxSpeed = 1500.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
-	ProjectileMovement->
+	//ProjectileMovement->
 }
 
 void AThrowKnifeActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
