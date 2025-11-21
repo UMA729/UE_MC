@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
 #include "EnemyAIController.generated.h"
 
 class UAIPerceptionComponent;
@@ -16,11 +18,27 @@ UCLASS()
 class MONSTERCATCHER_API AEnemyAIController : public AAIController
 {
 	GENERATED_BODY()
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI, meta = (AllowPrivateAccess = "true"))
-	UAIPerceptionComponent* AIControl;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI, meta = (AllowPrivateAccess = "true"))
-	UAISenseConfig_Sight* SightConfig;
+
 public:
 	AEnemyAIController();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI, meta = (AllowPrivateAccess = "true"))
+	UAIPerceptionComponent* PerceptionCmp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI, meta = (AllowPrivateAccess = "true"))
+	UAISenseConfig_Sight* SightConfig;
+
+protected:
+	virtual void BeginPlay()override;
+
+	UFUNCTION()
+	void OnTargetDetected(AActor* Actor, FAIStimulus Stimulus);
+private:
+	virtual void Tick(float Deltatime)override;
+
+	bool islooking;
+
+	AActor*PlayerActor;
+
+	float RotateSpeed;
 };

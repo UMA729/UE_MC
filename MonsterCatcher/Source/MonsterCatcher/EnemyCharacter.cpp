@@ -22,7 +22,7 @@ AEnemyCharacter::AEnemyCharacter()
 
 }
 
-// Called every frame
+// Called every frame  SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
