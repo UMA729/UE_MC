@@ -13,16 +13,24 @@ class MONSTERCATCHER_API AEnemyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	float stop_distance;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	bool isHyena;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	bool isArcheop;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	bool isFly_enemy;
 
 public:
 	AEnemyCharacter();
 	// Sets default values for this character's properties
 
-protected:
+//protected:
 	// Called when the game starts or when spawned
 
 public:	
-	APawn* MyPawn;
+	APawn* my_pawn;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -32,15 +40,24 @@ public:
 
 	void Move(float Deltatime);
 
+	void Hyena();
+
+	void Archeop();
+
+	void FlyEnemy();
+
 	void Dash();
 
 	void Attack();
 
-	float RotateSpeed;
+	float rotate_speed;
 
-	float MoveSpeed;
-
-	AActor*PlayerActor;
+	float move_speed;
 
 	bool isLooking;
+
+	bool isRush;
+
+	AActor*player_actor;
+
 };

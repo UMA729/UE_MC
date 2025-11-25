@@ -22,9 +22,9 @@ AEnemyCharacter::AEnemyCharacter()
 
 	isLooking = false;
 
-	RotateSpeed = 5.0f;
+	rotate_speed = 5.0f;
 
-	MoveSpeed = 0.5f;
+	move_speed = 0.5f;
 }
 
 // Called every frame  SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
@@ -47,6 +47,53 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AEnemyCharacter::Move(float Deltatime)
 {
+
+	float distance = FVector::Dist(player_actor->GetActorLocation(), my_pawn->GetActorLocation());
+
+	if (distance < stop_distance)
+	{
+		//ハイエナ挙動
+		if (isHyena)
+		{
+			Hyena();
+		}
+		//始祖鳥挙動
+		else if (isArcheop)
+		{
+			Archeop();
+		}
+		//飛行エネミー挙動
+		else if (isFly_enemy)
+		{
+			FlyEnemy();
+		}
+	}
+	if (!my_pawn && !player_actor) return;
+
+	//プレイヤーとの距離をとる
+	FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
+	//縦の追跡はなし
+	TargetActor.Z = 0;
+
+	FRotator LookatTarget = TargetActor.Rotation();
+	FRotator CurrentMyRot = my_pawn->GetActorRotation();
+
+	FRotator NewRotate = FMath::RInterpTo(
+		CurrentMyRot,
+		LookatTarget,
+		Deltatime,
+		rotate_speed
+	);
+
+
+	//プレイヤーを見る
+	my_pawn->SetActorRotation(NewRotate);
+
+	
+}
+
+void AEnemyCharacter::Hyena()
+{
 	if (Controller != nullptr)
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -54,36 +101,31 @@ void AEnemyCharacter::Move(float Deltatime)
 
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		AddMovementInput(ForwardDirection, MoveSpeed);
+		AddMovementInput(ForwardDirection, move_speed);
 	}
+}
 
+void AEnemyCharacter::Archeop()
+{
+	if (Controller != nullptr)
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	if (!MyPawn && !PlayerActor) return;
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-	//プレイヤーとの距離をとる
-	FVector TargetActor = PlayerActor->GetActorLocation() - MyPawn->GetActorLocation();
-	//縦の追跡はなし
-	TargetActor.Z = 0;
+		AddMovementInput(ForwardDirection, move_speed);
+	}
+}
 
-	FRotator LookatTarget = TargetActor.Rotation();
-	FRotator CurrentMyRot = MyPawn->GetActorRotation();
+void AEnemyCharacter::FlyEnemy()
+{
 
-	FRotator NewRotate = FMath::RInterpTo(
-		CurrentMyRot,
-		LookatTarget,
-		Deltatime,
-		RotateSpeed
-	);
-
-
-	//プレイヤーを見る
-	MyPawn->SetActorRotation(NewRotate);
-
-	
 }
 
 void AEnemyCharacter::Dash()
 {
+
 }
 
 void AEnemyCharacter::Attack()
