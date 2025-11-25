@@ -24,9 +24,6 @@ AEnemyAIController::AEnemyAIController()
 	PerceptionCmp->ConfigureSense(*SightConfig);
 	PerceptionCmp->SetDominantSense(SightConfig->GetSenseImplementation());
 
-	islooking = false;
-
-	RotateSpeed = 5.0f;
 }
 
 void AEnemyAIController::BeginPlay()
@@ -45,42 +42,30 @@ void AEnemyAIController::Tick(float Deltatime)
 
 	if (islooking)
 	{
-		APawn* ControlledPawn = GetPawn();
-		if (!ControlledPawn&&!PlayerActor) return;
-
-		//プレイヤーとの距離をとる
-		FVector TargetActor = PlayerActor->GetActorLocation() - ControlledPawn->GetActorLocation();
-		//縦の追跡はなし
-		TargetActor.Z = 0;
-
-		FRotator LookatTarget = TargetActor.Rotation();
-		FRotator CurrentMyRot = ControlledPawn->GetActorRotation();
-
-		FRotator NewRotate = FMath::RInterpTo(
-			CurrentMyRot,
-			LookatTarget,
-			Deltatime,
-			RotateSpeed
-		);
-
-			//プレイヤーを見る
-		ControlledPawn->SetActorRotation(NewRotate);
+		
 		
 	}
 }
 
 void AEnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 {
-
-	if (Stimulus.WasSuccessfullySensed())
+	//AIControllerを使うEnemyCharacterクラスを持ってくる
+	if (AEnemyCharacter* EnemyClass = Cast<AEnemyCharacter>(GetPawn()))
 	{
-		PlayerActor = Actor;
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			//EnemyのMove関数で動くようにPlayerと自分の位置情報などが入ってるPawn、Actorを持っていく
+			UE_LOG(LogTemp, Warning, TEXT("look"));
+			EnemyClass->PlayerActor = Actor;
+			EnemyClass->MyPawn = GetPawn();
+			//見つかった判定
+			EnemyClass->isLooking = true;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("leave：%s"), *Actor->GetName());
 
-		islooking = true;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("leave：%s"), *Actor->GetName());
-
+			EnemyClass->isLooking = false;
+		}
 	}
 }

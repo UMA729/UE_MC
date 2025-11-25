@@ -38,7 +38,4 @@ private:
 
 	bool islooking;
 
-	AActor*PlayerActor;
-
-	float RotateSpeed;
 };

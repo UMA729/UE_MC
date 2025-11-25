@@ -20,6 +20,11 @@ AEnemyCharacter::AEnemyCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 
+	isLooking = false;
+
+	RotateSpeed = 5.0f;
+
+	MoveSpeed = 0.5f;
 }
 
 // Called every frame  SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
@@ -27,7 +32,10 @@ void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Move(DeltaTime);
+	if (isLooking)
+	{
+		Move(DeltaTime);
+	}
 }
 
 // Called to bind functionality to input
@@ -39,7 +47,39 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AEnemyCharacter::Move(float Deltatime)
 {
+	if (Controller != nullptr)
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+		AddMovementInput(ForwardDirection, MoveSpeed);
+	}
+
+
+	if (!MyPawn && !PlayerActor) return;
+
+	//プレイヤーとの距離をとる
+	FVector TargetActor = PlayerActor->GetActorLocation() - MyPawn->GetActorLocation();
+	//縦の追跡はなし
+	TargetActor.Z = 0;
+
+	FRotator LookatTarget = TargetActor.Rotation();
+	FRotator CurrentMyRot = MyPawn->GetActorRotation();
+
+	FRotator NewRotate = FMath::RInterpTo(
+		CurrentMyRot,
+		LookatTarget,
+		Deltatime,
+		RotateSpeed
+	);
+
+
+	//プレイヤーを見る
+	MyPawn->SetActorRotation(NewRotate);
+
+	
 }
 
 void AEnemyCharacter::Dash()

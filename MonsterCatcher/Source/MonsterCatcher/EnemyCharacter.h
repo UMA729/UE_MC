@@ -22,6 +22,7 @@ protected:
 	// Called when the game starts or when spawned
 
 public:	
+	APawn* MyPawn;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -35,4 +36,11 @@ public:
 
 	void Attack();
 
+	float RotateSpeed;
+
+	float MoveSpeed;
+
+	AActor*PlayerActor;
+
+	bool isLooking;
 };

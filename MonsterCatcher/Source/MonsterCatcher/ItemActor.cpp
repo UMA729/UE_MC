@@ -43,10 +43,12 @@ void AItemActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//アイテム回転挙動
 	FRotator ItemRatation = GetActorRotation();
 	ItemRatation.Yaw += RotationSpeed * DeltaTime;
 	SetActorRotation(ItemRatation);
 
+	//アイテム上下移動
 	FVector ItemLocation = StartLocation;
 	float Time = GetWorld()->GetTimeSeconds();
 	ItemLocation.Z += FMath::Sin(Time * FloatSpeed) * FloatAmplitude;
