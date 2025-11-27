@@ -118,6 +118,7 @@ void AEnemyCharacter::Archeop()
 
 		AddMovementInput(ForwardDirection, move_speed);
 	}
+
 	//ƒvƒŒƒCƒ„[‚Æ‚Ì‹——£‚ð‚Æ‚é
 	FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
 	//c‚Ì’ÇÕ‚Í‚È‚µ
