@@ -50,7 +50,7 @@ void AEnemyCharacter::Move(float Deltatime)
 
 	float distance = FVector::Dist(player_actor->GetActorLocation(), my_pawn->GetActorLocation());
 
-	if (distance < stop_distance)
+	if (distance > stop_distance)
 	{
 		//ハイエナ挙動
 		if (isHyena)
@@ -70,24 +70,26 @@ void AEnemyCharacter::Move(float Deltatime)
 	}
 	if (!my_pawn && !player_actor) return;
 
-	//プレイヤーとの距離をとる
-	FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
-	//縦の追跡はなし
-	TargetActor.Z = 0;
+	if (!isArcheop)
+	{
+		//プレイヤーとの距離をとる
+		FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
+		//縦の追跡はなし
+		TargetActor.Z = 0;
 
-	FRotator LookatTarget = TargetActor.Rotation();
-	FRotator CurrentMyRot = my_pawn->GetActorRotation();
+		FRotator LookatTarget = TargetActor.Rotation();
+		FRotator CurrentMyRot = my_pawn->GetActorRotation();
 
-	FRotator NewRotate = FMath::RInterpTo(
-		CurrentMyRot,
-		LookatTarget,
-		Deltatime,
-		rotate_speed
-	);
+		FRotator NewRotate = FMath::RInterpTo(
+			CurrentMyRot,
+			LookatTarget,
+			Deltatime,
+			rotate_speed
+		);
 
-
-	//プレイヤーを見る
-	my_pawn->SetActorRotation(NewRotate);
+		//プレイヤーを見る
+		my_pawn->SetActorRotation(NewRotate);
+	}
 
 	
 }
@@ -116,6 +118,23 @@ void AEnemyCharacter::Archeop()
 
 		AddMovementInput(ForwardDirection, move_speed);
 	}
+	//プレイヤーとの距離をとる
+	FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
+	//縦の追跡はなし
+	TargetActor.Z = 0;
+
+	FRotator LookatTarget = TargetActor.Rotation();
+	FRotator CurrentMyRot = my_pawn->GetActorRotation();
+
+	FRotator NewRotate = FMath::RInterpTo(
+		CurrentMyRot,
+		LookatTarget,
+		Deltatime,
+		rotate_speed
+	);
+
+	//プレイヤーを見る
+	my_pawn->SetActorRotation(NewRotate);
 }
 
 void AEnemyCharacter::FlyEnemy()

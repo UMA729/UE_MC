@@ -3,6 +3,7 @@
 
 #include "EnemyAIController.h"
 #include "EnemyCharacter.h"
+#include "MyCharacter.h"
 
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"   
@@ -42,30 +43,32 @@ void AEnemyAIController::Tick(float Deltatime)
 
 	if (islooking)
 	{
-		
-		
+
 	}
 }
 
 void AEnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 {
-	//AIControllerを使うEnemyCharacterクラスを持ってくる
-	if (AEnemyCharacter* EnemyClass = Cast<AEnemyCharacter>(GetPawn()))
+	if (AMyCharacter* character = Cast<AMyCharacter>(Actor))
 	{
-		if (Stimulus.WasSuccessfullySensed())
+		//AIControllerを使うEnemyCharacterクラスを持ってくる
+		if (AEnemyCharacter* EnemyClass = Cast<AEnemyCharacter>(GetPawn()))
 		{
-			//EnemyのMove関数で動くようにPlayerと自分の位置情報などが入ってるPawn、Actorを持っていく
-			UE_LOG(LogTemp, Warning, TEXT("look"));
-			EnemyClass->player_actor = Actor;
-			EnemyClass->my_pawn = GetPawn();
-			//見つかった判定
-			EnemyClass->isLooking = true;
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("leave：%s"), *Actor->GetName());
+			if (Stimulus.WasSuccessfullySensed())
+			{
+				//EnemyのMove関数で動くようにPlayerと自分の位置情報などが入ってるPawn、Actorを持っていく
+				UE_LOG(LogTemp, Warning, TEXT("look"));
+				EnemyClass->player_actor = Actor;
+				EnemyClass->my_pawn = GetPawn();
+				//見つかった判定
+				EnemyClass->isLooking = true;
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("leave：%s"), *Actor->GetName());
 
-			EnemyClass->isLooking = false;
+				EnemyClass->isLooking = false;
+			}
 		}
 	}
 }

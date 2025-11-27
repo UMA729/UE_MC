@@ -3,6 +3,7 @@
 
 #include "ItemActor.h"
 #include "GimmickWall.h"
+#include "MyCharacter.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -15,7 +16,6 @@ AItemActor::AItemActor()
 	// RootComponent ÇçÏÇÈ
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	RootComponent = DefaultSceneRoot;
-
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 
@@ -60,13 +60,16 @@ void AItemActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 	UE_LOG(LogTemp, Warning, TEXT("Overlapî≠ê∂!"));
 	if (TargetWall) UE_LOG(LogTemp, Warning, TEXT("TargetWallÇ†ÇÈÇÊ"));
 
-	if (TargetWall)
+	if (AMyCharacter* character = Cast<AMyCharacter>(OtherActor))
 	{
-		if (AGimmickWall* Wall = Cast<AGimmickWall>(TargetWall))
+		if (TargetWall)
 		{
-			Wall->StartMoveUp();
+			if (AGimmickWall* Wall = Cast<AGimmickWall>(TargetWall))
+			{
+				Wall->StartMoveUp();
+			}
 		}
+		Destroy();
 	}
 
-	Destroy();
 }
