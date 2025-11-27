@@ -73,6 +73,9 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	bool bIsFiringGrapple; // ケーブルを伸ばしている最中
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
+	bool isAttacking;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
 	USceneComponent* GrappleAnchor;
 
 	bool isPers;		//視点フラグ
@@ -87,7 +90,9 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	float CurrentCableLength; // ケーブルの現在長さ
 	float TargetCableLength;  // ケーブルの目標長さ
 	float Distance;
-	
+
+	int HP;
+
 	// レイの現在位置（ケーブル先端）
 	FVector GrappleTip;
 

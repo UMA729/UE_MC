@@ -59,6 +59,7 @@ AMyCharacter::AMyCharacter()
 	//isPers = true;
 	isRunning = false;
 	isGrappling = false;
+	HP = 100;
 	Distance = 0.f;
 }
 
@@ -305,8 +306,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AMyCharacter::Run);				//ダッシュ
 		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AMyCharacter::StopRun);
 
-		EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Triggered, this, &AMyCharacter::Grappling);			//ダッシュ停止
-		EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Completed, this, &AMyCharacter::StopGrapple);			//ダッシュ停止
+		EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Started, this, &AMyCharacter::Grappling);			//ダッシュ停止
+		//EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Completed, this, &AMyCharacter::StopGrapple);			//ダッシュ停止
 	}
 }
 
@@ -394,18 +395,37 @@ void AMyCharacter::StopRun(const FInputActionValue& Value)
 //グラップル
 void AMyCharacter::Grappling(const FInputActionValue& Value)
 {
-	if (isGrappling || bIsFiringGrapple) return;
+	if (bIsFiringGrapple) return;
 
-	GrappleCable->SetVisibility(true);
-	bIsFiringGrapple = true;
-	bHasHitTarget = false;
+	if (!isGrappling)
+	{
+		GrappleCable->SetVisibility(true);
+		bIsFiringGrapple = true;
+		bHasHitTarget = false;
 
-	GrappleStart = FirstPersonCamera->GetComponentLocation();
-	CableStart = GetMesh()->GetSocketLocation(TEXT("RightHand"));
-	GrappleDir = FirstPersonCamera->GetForwardVector();
+		GrappleStart = FirstPersonCamera->GetComponentLocation();
+		CableStart = GetMesh()->GetSocketLocation(TEXT("RightHand"));
+		GrappleDir = FirstPersonCamera->GetForwardVector();
 
-	GrappleTip = GrappleStart; // 先端はまだカメラ位置から
-	CurrentCableLength = 0.f;
+		GrappleTip = GrappleStart; // 先端はまだカメラ位置から
+		CurrentCableLength = 0.f;
+	}
+	else
+	{
+		isGrappling = false;
+		bIsFiringGrapple = false;
+
+		GrappleCable->SetVisibility(false);
+
+		if (GrappleAnchor)
+		{
+			GrappleAnchor->DestroyComponent();
+			GrappleAnchor = nullptr;
+		}
+
+		// 通常の移動に戻す
+		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+	}
 }
 
 //グラップル停止

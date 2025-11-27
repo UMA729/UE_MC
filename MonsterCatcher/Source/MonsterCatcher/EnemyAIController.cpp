@@ -16,7 +16,7 @@ AEnemyAIController::AEnemyAIController()
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 	SightConfig->SightRadius = 1000.f;
 	SightConfig->LoseSightRadius = 1200.f;
-	SightConfig->PeripheralVisionAngleDegrees = 90.f;
+	SightConfig->PeripheralVisionAngleDegrees = 360.f;
 
 	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
 	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
@@ -41,10 +41,6 @@ void AEnemyAIController::Tick(float Deltatime)
 {
 	Super::Tick(Deltatime);
 
-	if (islooking)
-	{
-
-	}
 }
 
 void AEnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
@@ -68,6 +64,7 @@ void AEnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 				UE_LOG(LogTemp, Warning, TEXT("leaveF%s"), *Actor->GetName());
 
 				EnemyClass->isLooking = false;
+				EnemyClass->ResetAttack();
 			}
 		}
 	}
