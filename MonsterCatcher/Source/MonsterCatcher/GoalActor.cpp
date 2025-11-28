@@ -12,7 +12,7 @@ AGoalActor::AGoalActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	
-	GoalText = CreateDefaultSubobject<AActor>(TEXT("GoalText"));
+	GoalActor = CreateDefaultSubobject<AActor>(TEXT("GoalActor"));
 
 	// SphereCollision‚ð’Ç‰Á‚·‚é
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
@@ -34,26 +34,26 @@ void AGoalActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GoalText->SetActorHiddenInGame(true);
+	GoalActor->SetActorHiddenInGame(true);
 
-	StartLocation = GoalText->GetActorLocation();
-	StartRotate = GoalText->GetActorRotation();
+	StartLocation = GoalActor->GetActorLocation();
+	StartRotate = GoalActor->GetActorRotation();
 }
 
 void AGoalActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (GoalText && isGoal)
+	if (GoalActor && isGoal)
 	{
 		FRotator GoalRatation = StartRotate;
 		float Time = GetWorld()->GetTimeSeconds();
 		GoalRatation.Yaw += FMath::Sin(Time * FloatSpeed) * FloatAmplitude;
-		GoalText->SetActorRotation(GoalRatation);
+		GoalActor->SetActorRotation(GoalRatation);
 
 		FVector GoalLocation = StartLocation;
 		GoalLocation.Z += FMath::Sin(Time * FloatSpeed) * FloatAmplitude;
-		GoalText->SetActorLocation(GoalLocation);
+		GoalActor->SetActorLocation(GoalLocation);
 	}
 }
 
@@ -61,7 +61,7 @@ void AGoalActor::OpenGoal()
 {
 	UE_LOG(LogTemp, Warning, TEXT("‚Í‚¢‚è‚Ü‚µ‚½"));
 	isGoal = true;
-	GoalText->SetActorHiddenInGame(false);
+	GoalActor->SetActorHiddenInGame(false);
 }
 
 void AGoalActor::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
