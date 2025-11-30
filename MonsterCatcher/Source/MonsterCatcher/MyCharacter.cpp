@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "MyCharacter.h"
@@ -28,31 +28,31 @@ AMyCharacter::AMyCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 
-	// ƒJƒƒ‰ƒA[ƒ€‚ğì‚é (pulls in towards the player if there is a collision)
+	// ã‚«ãƒ¡ãƒ©ã‚¢ãƒ¼ãƒ ã‚’ä½œã‚‹ (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 0.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
-	// TPSƒJƒƒ‰
+	// TPSã‚«ãƒ¡ãƒ©
 	//ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
 	//ThirdPersonCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	//ThirdPersonCamera->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
-	// FPSƒJƒƒ‰
+	// FPSã‚«ãƒ¡ãƒ©
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FirstPersonCamera->SetupAttachment(CameraBoom); // “ª‚ÌSocket‚É‚­‚Á‚Â‚¯‚é‘z’è
+	FirstPersonCamera->SetupAttachment(CameraBoom); // é ­ã®Socketã«ãã£ã¤ã‘ã‚‹æƒ³å®š
 
-	//ƒOƒ‰ƒbƒvƒ‹ƒP[ƒuƒ‹
+	//ã‚°ãƒ©ãƒƒãƒ—ãƒ«ã‚±ãƒ¼ãƒ–ãƒ«
 	GrappleCable = CreateDefaultSubobject<UCableComponent>(TEXT("GrappleCable"));
 	GrappleCable->SetupAttachment(GetMesh(), TEXT("RightHand"));
 	GrappleCable->SetVisibility(false);
 	
-	//GrappleCable->bEnableStiffness = true;	//’£—Í‚ğ—LŒø
-	GrappleCable->bEnableCollision = true;		//Õ“Ë”»’è‚ğØ‚é
+	//GrappleCable->bEnableStiffness = true;	//å¼µåŠ›ã‚’æœ‰åŠ¹
+	GrappleCable->bEnableCollision = true;		//è¡çªåˆ¤å®šã‚’åˆ‡ã‚‹
 	GrappleCable->NumSegments = 10;
 	GrappleCable->SolverIterations = 16;
-	// ƒP[ƒuƒ‹‚Í‘Sˆõ‚ÉŒ©‚¹‚½‚¢i“Á‚ÉƒvƒŒƒCƒ„[‚É‚àj
+	// ã‚±ãƒ¼ãƒ–ãƒ«ã¯å…¨å“¡ã«è¦‹ã›ãŸã„ï¼ˆç‰¹ã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã‚‚ï¼‰
 	GrappleCable->SetOwnerNoSee(false);
 	GrappleCable->SetOnlyOwnerSee(false);
 
@@ -108,33 +108,33 @@ void AMyCharacter::NotifyControllerChanged()
 	}
 }
 
-//–ˆƒtƒŒ[ƒ€XV
+//æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	// ƒP[ƒuƒ‹”òãÄ’†iL‚Î‚µ’†j
+	// ã‚±ãƒ¼ãƒ–ãƒ«é£›ç¿”ä¸­ï¼ˆä¼¸ã°ã—ä¸­ï¼‰
 	if (bIsFiringGrapple)
 	{
-		// æ’[‚ğL‚Î‚·
+		// å…ˆç«¯ã‚’ä¼¸ã°ã™
 		float FireSpeed = 4000.f;
 		CurrentCableLength += FireSpeed * DeltaTime;
 
 		//FVector AdjustedDir = GrappleDir;
-		//AdjustedDir = FVector(0.f,0.f,0.f); // X¬•ª‚ğƒ[ƒ‚É‚µ‚Ä–³‹
-		//AdjustedDir.Normalize(); // ³‹K‰»‚µ’¼‚·id—vj
+		//AdjustedDir = FVector(0.f,0.f,0.f); // Xæˆåˆ†ã‚’ã‚¼ãƒ­ã«ã—ã¦ç„¡è¦–
+		//AdjustedDir.Normalize(); // æ­£è¦åŒ–ã—ç›´ã™ï¼ˆé‡è¦ï¼‰
 
-		//‚±‚±‚ÅX‚ª+‚³‚ê‚Ä‚µ‚Ü‚¤‚Ì‚ªŒ´ˆö == ~
+		//ã“ã“ã§XãŒ+ã•ã‚Œã¦ã—ã¾ã†ã®ãŒåŸå›  == Ã—
 		GrappleTip = GrappleStart + GrappleDir * CurrentCableLength;
 
 		//UE_LOG(LogTemp, Warning, TEXT("%f,%f,%f"), GrappleTip.X, GrappleTip.Y, GrappleTip.Z);
-		// ƒŒƒC‚ğ“s“x”ò‚Î‚·iæ’[‚Ü‚Åj
-		//ƒOƒ‰ƒbƒvƒ‹“Vˆä—pƒŒƒC
+		// ãƒ¬ã‚¤ã‚’éƒ½åº¦é£›ã°ã™ï¼ˆå…ˆç«¯ã¾ã§ï¼‰
+		//ã‚°ãƒ©ãƒƒãƒ—ãƒ«å¤©äº•ç”¨ãƒ¬ã‚¤
 		FHitResult GraHit;
 		FCollisionQueryParams GrappleParams;
 		GrappleParams.AddIgnoredActor(this);
 		FCollisionObjectQueryParams  GraObjParams;
 		GraObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel1);
-		//ƒMƒ~ƒbƒN—pƒŒƒC
+		//ã‚®ãƒŸãƒƒã‚¯ç”¨ãƒ¬ã‚¤
 		FHitResult GimHit;
 		FCollisionQueryParams GimmickParams;
 		GimmickParams.AddIgnoredActor(this);
@@ -162,10 +162,10 @@ void AMyCharacter::Tick(float DeltaTime)
 			UE_LOG(LogTemp, Warning, TEXT("HitActor: %s"), *GimHit.GetActor()->GetName());
 		}
 
-		// ‹ŠoŠm”F—pƒ‰ƒCƒ“
+		// è¦–è¦šç¢ºèªç”¨ãƒ©ã‚¤ãƒ³
 		//DrawDebugLine(GetWorld(), GrappleStart, GrappleTip, FColor::Green, false, -1.0f, 0, 2.0f);
 
-		// ƒP[ƒuƒ‹‚Ìæ’[ˆÊ’uXV
+		// ã‚±ãƒ¼ãƒ–ãƒ«ã®å…ˆç«¯ä½ç½®æ›´æ–°
 		if (!gHit)
 			GrappleCable->SetWorldLocation(GrappleStart);
 
@@ -173,20 +173,28 @@ void AMyCharacter::Tick(float DeltaTime)
 		if (!bHasHitTarget)
 		{
 
-			// ‚Ü‚¾“–‚½‚Á‚Ä‚¢‚È‚¢ŠÔ‚ÍƒP[ƒuƒ‹‚ÌI“_‚ğæ’[‚É’Ç]
 			if (!GrappleAnchor)
 			{
-				GrappleAnchor = NewObject<USceneComponent>(this);
-				GrappleAnchor->RegisterComponent();
+				GrappleAnchor = NewObject<USceneComponent>(this, TEXT("GrappleAnchor"));
+				if (GrappleAnchor)
+				{
+					GrappleAnchor->RegisterComponent();
+					GrappleAnchor->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
+				}
 			}
-			GrappleAnchor->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
-			GrappleAnchor->SetWorldLocation(GrappleTip);
-			GrappleStart = GrappleCable->GetComponentLocation();
-			GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
+
+			// æŠŠæ¡ç‚¹ã‚’ä½¿ã£ã¦ Anchor ã‚’å›ºå®š
+			GrabPoint = GraHit.ImpactPoint;
+			if (GrappleAnchor)
+			{
+				GrappleAnchor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+				GrappleAnchor->SetWorldLocation(GrabPoint);
+				GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
+			}
 
 		}
 
-		// –½’†‚µ‚½uŠÔ
+		// å‘½ä¸­ã—ãŸç¬é–“
 		if (bHit && !bHasHitTarget)
 		{
 			if (AActor* HitActor = GimHit.GetActor())
@@ -209,7 +217,7 @@ void AMyCharacter::Tick(float DeltaTime)
 			GrappleAnchor->SetWorldLocation(GrabPoint);
 
 			TargetCableLength = FVector::Distance(GrappleStart, GrabPoint);
-			CurrentCableLength = TargetCableLength; // ƒsƒbƒ^ƒŠ‚Ì’·‚³‚ÅŒÅ’è
+			CurrentCableLength = TargetCableLength; // ãƒ”ãƒƒã‚¿ãƒªã®é•·ã•ã§å›ºå®š
 
 			bIsFiringGrapple = false;
 			isGrappling = true;
@@ -217,7 +225,7 @@ void AMyCharacter::Tick(float DeltaTime)
 			//UE_LOG(LogTemp, Warning, TEXT("Grapple Hit: %s"), *GrabPoint.ToString());
 		}
 
-		// ˆê’è‹——£‚Ü‚ÅL‚Î‚µ‚½‚Ì‚É“–‚½‚ç‚È‚©‚Á‚½‚çƒŠƒZƒbƒg
+		// ä¸€å®šè·é›¢ã¾ã§ä¼¸ã°ã—ãŸã®ã«å½“ãŸã‚‰ãªã‹ã£ãŸã‚‰ãƒªã‚»ãƒƒãƒˆ
 		if (CurrentCableLength > 3000.f && !bHasHitTarget)
 		{
 			bIsFiringGrapple = false;
@@ -231,13 +239,21 @@ void AMyCharacter::Tick(float DeltaTime)
 	}
 
 
-	// U‚èq•¨—ˆ—
+	// æŒ¯ã‚Šå­ç‰©ç†å‡¦ç†
 	if (isGrappling)
 	{
+		const float MinCableLength = 300.f;
 
-		float MinCableLength = 300.f;
-		CurrentCableLength = FMath::Max(CurrentCableLength - (1000.f*1000) * (DeltaTime*10), MinCableLength);
+		// â†ä»Šã¾ã§ã¯ Max ã§å¼·åˆ¶çš„ã«ç¸®ã‚ã¦ã„ãŸãŒã€
+		//    ã“ã“ã‚’æ»‘ã‚‰ã‹ãªè£œé–“ã«å¤‰ãˆã‚‹
+		float InterpSpeed = 12.f; // â† é€Ÿãã—ãŸã„ãªã‚‰20ã€œ30ã«ã—ã¦OK
 
+		CurrentCableLength = FMath::FInterpTo(
+			CurrentCableLength,   // ç¾åœ¨ã®é•·ã•
+			MinCableLength,       // ç›®æ¨™ã®é•·ã•ï¼ˆç¬¬äºŒå¼•æ•°ï¼‰
+			DeltaTime,
+			InterpSpeed
+		);
 
 		FVector ActorLoc = GetActorLocation();
 		FVector ToAnchor = GrabPoint - ActorLoc;
@@ -256,7 +272,7 @@ void AMyCharacter::Tick(float DeltaTime)
 		GetCharacterMovement()->Velocity = TangentialVelocity;
 	}
 
-	// U‚èq•¨—ˆ— ÀŒ±
+	// æŒ¯ã‚Šå­ç‰©ç†å‡¦ç† å®Ÿé¨“
 	//if (isGrappling)
 	//{
 	//	FVector ActorLoc = GetActorLocation();
@@ -264,21 +280,21 @@ void AMyCharacter::Tick(float DeltaTime)
 	//	float DistanceToAnchor = ToAnchor.Size();
 	//	FVector RopeDir = ToAnchor.GetSafeNormal();
 
-	//	// ƒ[ƒv‚Ì’·‚³‚ğí‚ÉŒ»İ‚Ì‹——£‚É’Ç]‚³‚¹‚é
+	//	// ãƒ­ãƒ¼ãƒ—ã®é•·ã•ã‚’å¸¸ã«ç¾åœ¨ã®è·é›¢ã«è¿½å¾“ã•ã›ã‚‹
 	//	CurrentCableLength = DistanceToAnchor;
 
-	//	// ƒ[ƒv‚Ì’£—Í•â³iŒy‚­ˆø‚«–ß‚·‚æ‚¤‚Éj
+	//	// ãƒ­ãƒ¼ãƒ—ã®å¼µåŠ›è£œæ­£ï¼ˆè»½ãå¼•ãæˆ»ã™ã‚ˆã†ã«ï¼‰
 	//	FVector CorrectedPos = GrabPoint - RopeDir * CurrentCableLength;
 	//	FVector Correction = CorrectedPos - ActorLoc;
 	//	GetCharacterMovement()->AddForce(Correction * 800.f);
 
-	//	// d—Í‚ğ‰Á‚¦‚é
+	//	// é‡åŠ›ã‚’åŠ ãˆã‚‹
 	//	GetCharacterMovement()->AddForce(FVector(0, 0, -980.f * GetCharacterMovement()->Mass));
 
-	//	// ƒ[ƒv•ûŒü‚Ì‘¬“x§ŒÀ‚ğã‚ß‚éiŠ®‘SŒÅ’è‚¾‚Æ“®‚¯‚È‚¢j
+	//	// ãƒ­ãƒ¼ãƒ—æ–¹å‘ã®é€Ÿåº¦åˆ¶é™ã‚’å¼±ã‚ã‚‹ï¼ˆå®Œå…¨å›ºå®šã ã¨å‹•ã‘ãªã„ï¼‰
 	//	FVector Velocity = GetCharacterMovement()->Velocity;
 	//	float SpeedAlongRope = FVector::DotProduct(Velocity, RopeDir);
-	//	FVector TangentialVelocity = Velocity - RopeDir * SpeedAlongRope * 0.3; // 0.0`1.0‚Å’²®
+	//	FVector TangentialVelocity = Velocity - RopeDir * SpeedAlongRope * 0.3; // 0.0ï½1.0ã§èª¿æ•´
 	//	GetCharacterMovement()->Velocity = TangentialVelocity;
 	//}
 
@@ -291,23 +307,23 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	if (UEnhancedInputComponent* EnhancedInputConponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputConponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);				//ƒWƒƒƒ“ƒv
-		EnhancedInputConponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);		//ƒWƒƒƒ“ƒv’â~
+		EnhancedInputConponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);				//ã‚¸ãƒ£ãƒ³ãƒ—
+		EnhancedInputConponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);		//ã‚¸ãƒ£ãƒ³ãƒ—åœæ­¢
 																														
-		EnhancedInputConponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyCharacter::Move);			//ˆÚ“®
+		EnhancedInputConponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyCharacter::Move);			//ç§»å‹•
 																														
-		EnhancedInputConponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);			//‹“_ˆÚ“®
+		EnhancedInputConponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);			//è¦–ç‚¹ç§»å‹•
 																														
-		//EnhancedInputConponent->BindAction(ZoomInAction, ETriggerEvent::Triggered, this, &AMyCharacter::ZoomIn);		//ƒJƒƒ‰ƒY[ƒ€ƒCƒ“
-		//EnhancedInputConponent->BindAction(ZoomOutAction, ETriggerEvent::Triggered, this, &AMyCharacter::ZoomOut);		//ƒJƒƒ‰ƒY[ƒ€ƒAƒEƒg
+		//EnhancedInputConponent->BindAction(ZoomInAction, ETriggerEvent::Triggered, this, &AMyCharacter::ZoomIn);		//ã‚«ãƒ¡ãƒ©ã‚ºãƒ¼ãƒ ã‚¤ãƒ³
+		//EnhancedInputConponent->BindAction(ZoomOutAction, ETriggerEvent::Triggered, this, &AMyCharacter::ZoomOut);		//ã‚«ãƒ¡ãƒ©ã‚ºãƒ¼ãƒ ã‚¢ã‚¦ãƒˆ
 																														
-		//EnhancedInputConponent->BindAction(PersAction, ETriggerEvent::Started, this, &AMyCharacter::Pers);				//‹“_Ø‚è‘Ö‚¦
+		//EnhancedInputConponent->BindAction(PersAction, ETriggerEvent::Started, this, &AMyCharacter::Pers);				//è¦–ç‚¹åˆ‡ã‚Šæ›¿ãˆ
 																														
-		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AMyCharacter::Run);				//ƒ_ƒbƒVƒ…
+		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AMyCharacter::Run);				//ãƒ€ãƒƒã‚·ãƒ¥
 		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AMyCharacter::StopRun);
 
-		EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Started, this, &AMyCharacter::Grappling);			//ƒ_ƒbƒVƒ…’â~
-		//EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Completed, this, &AMyCharacter::StopGrapple);			//ƒ_ƒbƒVƒ…’â~
+		EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Started, this, &AMyCharacter::Grappling);			//ãƒ€ãƒƒã‚·ãƒ¥åœæ­¢
+		//EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Completed, this, &AMyCharacter::StopGrapple);			//ãƒ€ãƒƒã‚·ãƒ¥åœæ­¢
 	}
 }
 
@@ -318,16 +334,16 @@ void AMyCharacter::Move(const FInputActionValue& Value)
 
 	if (Controller != nullptr && GetCharacterMovement()->IsFalling() == false || bIsFiringGrapple == false && isGrappling == false)
 	{
-		//ƒLƒƒƒ‰³–Ê‚ğæ“¾
+		//ã‚­ãƒ£ãƒ©æ­£é¢ã‚’å–å¾—
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// ³–Ê‚Ö‚ÌƒxƒNƒgƒ‹‚ğæ“¾
+		// æ­£é¢ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		// ‰¡•ûŒü‚ÌƒxƒNƒgƒ‹‚ğæ“¾ 
+		// æ¨ªæ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾— 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// “®‚«‚É”½‰f
+		// å‹•ãã«åæ˜ 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
@@ -335,33 +351,33 @@ void AMyCharacter::Move(const FInputActionValue& Value)
 
 void AMyCharacter::Look(const FInputActionValue& Value)
 {
-	// 2²‚ÌƒxƒNƒgƒ‹‚ğæ“¾
+	// 2è»¸ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
 	if (Controller != nullptr)
 	{
 		float LookSensitivity = 0.5f;
-		//ƒ}ƒEƒX‚Ì“®‚«‚É‚ ‚í‚¹‚Ä‹“_‚É”½‰f
+		//ãƒã‚¦ã‚¹ã®å‹•ãã«ã‚ã‚ã›ã¦è¦–ç‚¹ã«åæ˜ 
 		AddControllerYawInput(LookAxisVector.X * LookSensitivity);
 		AddControllerPitchInput(-LookAxisVector.Y * LookSensitivity);
 	}
 }
 
-//ƒY[ƒ€ƒCƒ“
+//ã‚ºãƒ¼ãƒ ã‚¤ãƒ³
 void AMyCharacter::ZoomIn(const FInputActionValue& Value)
 {
 	if (CameraBoom->TargetArmLength > 200)
 	CameraBoom->TargetArmLength -= 30;
 }
 
-//ƒY[ƒ€ƒAƒEƒg
+//ã‚ºãƒ¼ãƒ ã‚¢ã‚¦ãƒˆ
 void AMyCharacter::ZoomOut(const FInputActionValue& Value)
 {
 	if (CameraBoom->TargetArmLength < 600)
 	CameraBoom->TargetArmLength += 30;
 }
 
-//‹“_Ø‚è‘Ö‚¦
+//è¦–ç‚¹åˆ‡ã‚Šæ›¿ãˆ
 void AMyCharacter::Pers(const FInputActionValue& Value)
 {
 	isPers = !isPers;
@@ -378,21 +394,21 @@ void AMyCharacter::Pers(const FInputActionValue& Value)
 	}
 }
 
-//ƒ_ƒbƒVƒ…
+//ãƒ€ãƒƒã‚·ãƒ¥
 void AMyCharacter::Run(const FInputActionValue& Value)
 {
 	isRunning = true;
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
 }
 
-//ƒ_ƒbƒVƒ…’â~
+//ãƒ€ãƒƒã‚·ãƒ¥åœæ­¢
 void AMyCharacter::StopRun(const FInputActionValue& Value)
 {
 	isRunning = false;
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 }
 
-//ƒOƒ‰ƒbƒvƒ‹
+//ã‚°ãƒ©ãƒƒãƒ—ãƒ«
 void AMyCharacter::Grappling(const FInputActionValue& Value)
 {
 	if (bIsFiringGrapple) return;
@@ -407,7 +423,7 @@ void AMyCharacter::Grappling(const FInputActionValue& Value)
 		CableStart = GetMesh()->GetSocketLocation(TEXT("RightHand"));
 		GrappleDir = FirstPersonCamera->GetForwardVector();
 
-		GrappleTip = GrappleStart; // æ’[‚Í‚Ü‚¾ƒJƒƒ‰ˆÊ’u‚©‚ç
+		GrappleTip = GrappleStart; // å…ˆç«¯ã¯ã¾ã ã‚«ãƒ¡ãƒ©ä½ç½®ã‹ã‚‰
 		CurrentCableLength = 0.f;
 	}
 	else
@@ -423,12 +439,12 @@ void AMyCharacter::Grappling(const FInputActionValue& Value)
 			GrappleAnchor = nullptr;
 		}
 
-		// ’Êí‚ÌˆÚ“®‚É–ß‚·
+		// é€šå¸¸ã®ç§»å‹•ã«æˆ»ã™
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 	}
 }
 
-//ƒOƒ‰ƒbƒvƒ‹’â~
+//ã‚°ãƒ©ãƒƒãƒ—ãƒ«åœæ­¢
 void AMyCharacter::StopGrapple(const FInputActionValue& Value)
 {
 	if (!isGrappling && !bIsFiringGrapple) return;
@@ -444,6 +460,6 @@ void AMyCharacter::StopGrapple(const FInputActionValue& Value)
 		GrappleAnchor = nullptr;
 	}
 
-	// ’Êí‚ÌˆÚ“®‚É–ß‚·
+	// é€šå¸¸ã®ç§»å‹•ã«æˆ»ã™
 	GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 }

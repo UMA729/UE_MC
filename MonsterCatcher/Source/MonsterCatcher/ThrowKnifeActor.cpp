@@ -14,7 +14,7 @@ AThrowKnifeActor::AThrowKnifeActor()
 	KunaiCollision = CreateDefaultSubobject<USphereComponent>(TEXT("ShereComp"));
 	KunaiCollision->InitSphereRadius(5.0f);
 	KunaiCollision->BodyInstance.SetCollisionProfileName("Projectile");
-	KunaiCollision->OnComponentHit.AddDynamic(this, &AThrowKnifeActor::OnHit);
+	//KunaiCollision->OnComponentHit.AddDynamic(this, &AThrowKnifeActor::OnHit);
 
 	KunaiCollision->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
 
@@ -29,6 +29,6 @@ AThrowKnifeActor::AThrowKnifeActor()
 	//ProjectileMovement->
 }
 
-void AThrowKnifeActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-}
+//void AThrowKnifeActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+//{
+//}

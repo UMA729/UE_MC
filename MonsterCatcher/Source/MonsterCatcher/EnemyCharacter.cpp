@@ -58,14 +58,6 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
-void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (AMyCharacter* CharacterClass = Cast<AMyCharacter>(OtherActor))
-	{
-
-	}
-}
-
 void AEnemyCharacter::Move(float Deltatime)
 {
 
@@ -135,7 +127,7 @@ void AEnemyCharacter::Archeop()
 {
 	if (Controller != nullptr)
 	{
-		
+
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
@@ -143,34 +135,28 @@ void AEnemyCharacter::Archeop()
 
 		AddMovementInput(ForwardDirection, move_speed);
 
-		if (!bisFlying)
+
+		FHitResult Hit;
+		FVector Start = GetActorLocation();
+		FVector End = Start - FVector(0, 0, 200); // 200cm下にRay
+
+		FHitResult GroundHit;
+		FCollisionQueryParams GroundParams;
+		GroundParams.AddIgnoredActor(this);
+		FCollisionObjectQueryParams  GrondObjParams;
+		GrondObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel3);
+
+		bool bGround = GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, GrondObjParams, GroundParams);
+
+		if (!bGround)
 		{
-
-			FHitResult Hit;
-			FVector Start = GetActorLocation();
-			FVector End = Start - FVector(0, 0, 200); // 200cm下にRay
-
-			FHitResult GroundHit;
-			FCollisionQueryParams GroundParams;
-			GroundParams.AddIgnoredActor(this);
-			FCollisionObjectQueryParams  GrondObjParams;
-			GrondObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel3);
-
-			bool bGround = GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, GrondObjParams, GroundParams);
-
-			if (!bGround)
-			{
-				bisFlying = true;
-			}
-			else
-			{
-				GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-			}
-
+			bisFlying = true;
+			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 		}
 		else
 		{
-			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+			bisFlying = false;
+			GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 		}
 	}
 }
@@ -191,28 +177,45 @@ void AEnemyCharacter::Attack()
 	{
 		bisAttacking = true;
 		Sphere->SetActive(true);
+		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+		{
+			FOnMontageEnded EndDelegate;
+			EndDelegate.BindUObject(this, &AEnemyCharacter::OnAttackMontageEnded);
+
+			AnimInstance->Montage_Play(AttackMontage);
+			AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
+		}
 	}
 	else if (isFly_enemy && !bisAttacking)
 	{
 		//空中の敵の攻撃
 		;
 	}
-	else
-	{
-		if(Sphere)
-		Sphere->SetActive(false);
+}
 
-		GetWorld()->GetTimerManager().SetTimer(
-			attack_cooldown,
-			this,
-			&AEnemyCharacter::ResetAttack,
-			cooldown_time,
-			false
-		);
-	}
+void AEnemyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	Sphere->SetActive(false);
+
+	// クールタイム開始
+	GetWorld()->GetTimerManager().SetTimer(
+		attack_cooldown,
+		this,
+		&AEnemyCharacter::ResetAttack,
+		cooldown_time,
+		false
+	);
 }
 
 void AEnemyCharacter::ResetAttack()
 {
 	bisAttacking = false;
+}
+
+void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (AMyCharacter* CharacterClass = Cast<AMyCharacter>(OtherActor))
+	{
+
+	}
 }

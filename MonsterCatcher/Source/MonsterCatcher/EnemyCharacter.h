@@ -22,6 +22,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	float stop_distance;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
+	UAnimMontage* AttackMontage;
+
 	//敵：ハイエナ
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	bool isHyena;
@@ -32,6 +35,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	bool isFly_enemy;
 
+	//攻撃フラグ
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	bool bisAttacking;
+	//飛行フラグ
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	bool bisFlying;
 	
 	// Sets default values for this character's properties
 
@@ -40,13 +49,6 @@ protected:
 
 private:
 	void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	//攻撃フラグ
-	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
-	bool bisAttacking;
-	//飛行フラグ
-	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
-	bool bisFlying;
 
 	/** 接触判定用のCollision : Sphere */
 	UPROPERTY(VisibleAnywhere, Category = Goal, meta = (AllowPrivateAccess = "true"))
@@ -80,6 +82,9 @@ public:
 	void Dash();
 	//敵：攻撃
 	void Attack();
+	//モンタージュ待ち
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	//敵：攻撃ストップ
 	void ResetAttack();
 
