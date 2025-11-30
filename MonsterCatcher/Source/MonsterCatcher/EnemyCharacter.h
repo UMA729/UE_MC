@@ -57,13 +57,8 @@ private:
 	//攻撃クールダウン
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	float cooldown_time;
-
-	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
-	float HP;
-
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	float attck_damage;
-
 public:	
 	APawn* my_pawn;
 

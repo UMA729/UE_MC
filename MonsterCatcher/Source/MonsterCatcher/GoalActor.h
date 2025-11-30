@@ -27,7 +27,7 @@ public:
 	TSoftObjectPtr<UWorld> LoadLevel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* GoalActor;
+	AActor* GoalText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* LeverActor;
