@@ -23,11 +23,18 @@ AEnemyCharacter::AEnemyCharacter()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 
-	Sphere->SetupAttachment(GetCapsuleComponent());
+	Sphere->SetupAttachment(RootComponent);
 
-	Sphere->SetSphereRadius(attack_radius);
-	Sphere->SetActive(false);
+	Sphere->SetSphereRadius(100.0f);
 
+	Sphere->SetCollisionResponseToAllChannels(ECR_Overlap);
+	Sphere->SetCollisionObjectType(ECC_WorldDynamic);
+
+	Sphere->SetGenerateOverlapEvents(true);
+
+	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	//Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	isLooking = false;
 	bisFlying = false;
 	cooldown_time = 1.0f;
@@ -39,6 +46,13 @@ AEnemyCharacter::AEnemyCharacter()
 	attck_damage = 10.0f;
 }
 
+void AEnemyCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::OnSphereBeginOverlap);
+	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
 
 // Called every frame  SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 void AEnemyCharacter::Tick(float DeltaTime)
@@ -60,7 +74,6 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AEnemyCharacter::Move(float Deltatime)
 {
-
 	float distance = FVector::Dist(player_actor->GetActorLocation(), my_pawn->GetActorLocation());
 
 	if (distance > stop_distance)
@@ -68,7 +81,7 @@ void AEnemyCharacter::Move(float Deltatime)
 		//ハイエナ挙動
 		if (isHyena)
 		{
-			Hyena();
+			Hyena(Deltatime);
 		}
 		//始祖鳥挙動
 		else if (isArcheop)
@@ -88,7 +101,7 @@ void AEnemyCharacter::Move(float Deltatime)
 
 	if (!my_pawn && !player_actor) return;
 
-	//if (!isArcheop)
+	if (!isHyena)
 	{
 		//プレイヤーとの距離をとる
 		FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
@@ -110,17 +123,44 @@ void AEnemyCharacter::Move(float Deltatime)
 	}
 }
 
-void AEnemyCharacter::Hyena()
+void AEnemyCharacter::Hyena(float Deltatime)
 {
 	if (Controller != nullptr)
 	{
+		if (isLocking)
+		{
+
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
 		AddMovementInput(ForwardDirection, move_speed);
+		}
+		else
+		{
+			//プレイヤーとの距離をとる
+			FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
+			//縦の追跡はなし
+			TargetActor.Z = 0;
+
+			FRotator LookatTarget = TargetActor.Rotation();
+			FRotator CurrentMyRot = my_pawn->GetActorRotation();
+
+			FRotator NewRotate = FMath::RInterpTo(
+				CurrentMyRot,
+				LookatTarget,
+				Deltatime,
+				rotate_speed
+			);
+
+			//プレイヤーを見る
+			my_pawn->SetActorRotation(NewRotate);
+		}
 	}
+
+	
+
 }
 
 void AEnemyCharacter::Archeop()
@@ -176,7 +216,6 @@ void AEnemyCharacter::Attack()
 	if (!isFly_enemy && !bisAttacking)
 	{
 		bisAttacking = true;
-		Sphere->SetActive(true);
 		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 		{
 			FOnMontageEnded EndDelegate;
@@ -195,8 +234,8 @@ void AEnemyCharacter::Attack()
 
 void AEnemyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	Sphere->SetActive(false);
-
+	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// クールタイム開始
 	GetWorld()->GetTimerManager().SetTimer(
 		attack_cooldown,
@@ -212,10 +251,11 @@ void AEnemyCharacter::ResetAttack()
 	bisAttacking = false;
 }
 
-void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AEnemyCharacter::OnSphereBeginOverlap
+	(UPrimitiveComponent* OverlappedComp,AActor* OtherActor,UPrimitiveComponent* OtherComp,	int32 OtherBodyIndex,bool bFromSweep,const FHitResult& SweepResult)
 {
 	if (AMyCharacter* CharacterClass = Cast<AMyCharacter>(OtherActor))
 	{
-
+		
 	}
 }

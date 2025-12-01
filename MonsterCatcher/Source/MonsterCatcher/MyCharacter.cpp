@@ -173,23 +173,26 @@ void AMyCharacter::Tick(float DeltaTime)
 		if (!bHasHitTarget)
 		{
 
-			if (!GrappleAnchor)
+			if (GrappleCable)
 			{
-				GrappleAnchor = NewObject<USceneComponent>(this, TEXT("GrappleAnchor"));
+				// CableComponent自体の位置は「開始点(ソケット)」のままにしておき、終端アタッチ先（Anchor）を動かす方が一般的
+				// Anchor が無ければ作成して FirstPersonCamera に相対アタッチしておく
+				if (!GrappleAnchor)
+				{
+					GrappleAnchor = NewObject<USceneComponent>(this, TEXT("GrappleAnchor"));
+					if (GrappleAnchor)
+					{
+						GrappleAnchor->RegisterComponent();
+						GrappleAnchor->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
+					}
+				}
+
 				if (GrappleAnchor)
 				{
-					GrappleAnchor->RegisterComponent();
-					GrappleAnchor->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
+					// Anchor を先端位置に移動させ、ケーブルの終点を Anchor にアタッチ
+					GrappleAnchor->SetWorldLocation(GrappleTip);
+					GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
 				}
-			}
-
-			// 把握点を使って Anchor を固定
-			GrabPoint = GraHit.ImpactPoint;
-			if (GrappleAnchor)
-			{
-				GrappleAnchor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-				GrappleAnchor->SetWorldLocation(GrabPoint);
-				GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
 			}
 
 		}

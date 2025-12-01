@@ -23,6 +23,7 @@ AGoalActor::AGoalActor()
 
 	// OnComponentBeginOverlap‚ğBind‚·‚é
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AGoalActor::OnSphereBeginOverlap);
+
 	// StaticMeshComponent‚ğ’Ç‰Á‚µARootComponent‚Éİ’è‚·‚é
 	Goal = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 

@@ -46,12 +46,22 @@ public:
 
 protected:
 	// Called when the game starts or when spawned
+	virtual void BeginPlay()override;
 
 private:
-	void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnSphereBeginOverlap(
+		UPrimitiveComponent* OverlappedComp,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult
+	);
 
 	/** 接触判定用のCollision : Sphere */
-	UPROPERTY(VisibleAnywhere, Category = Goal, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Goal, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USphereComponent> Sphere;
 	//移動速度
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
@@ -73,7 +83,7 @@ public:
 	void Move(float Deltatime);
 
 	//ハイエナ挙動
-	void Hyena();
+	void Hyena(float Deltatime);
 	//始祖鳥挙動
 	void Archeop();
 	//飛行キャラ挙動
@@ -92,6 +102,7 @@ public:
 
 	bool isLooking;
 	bool isRush;
+	bool isLocking;
 
 	FTimerHandle attack_cooldown;
 
