@@ -32,9 +32,10 @@ AEnemyCharacter::AEnemyCharacter()
 
 	Sphere->SetGenerateOverlapEvents(true);
 
-	Sphere->SetHiddenInGame(false);             // ゲーム中に見える
-	Sphere->bHiddenInGame = false;              // 念のため
-	Sphere->SetVisibility(true);
+	//デバッグ用
+	//Sphere->SetHiddenInGame(false);             // ゲーム中に見える
+	//Sphere->bHiddenInGame = false;              // 念のため
+	//Sphere->SetVisibility(true);
 
 
 
@@ -57,6 +58,9 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	ori_pos = GetActorLocation();
 
 	if (isHyena)
 	{
@@ -81,9 +85,66 @@ void AEnemyCharacter::Tick(float DeltaTime)
 	{
 		Destroy();
 	}
+
+	if (isArcheop)
+	{
+		FHitResult Hit;
+		FVector Start = GetActorLocation();
+		FVector End = Start - FVector(0, 0, 200); // 200cm下にRay
+
+		FHitResult GroundHit;
+		FCollisionQueryParams GroundParams;
+		GroundParams.AddIgnoredActor(this);
+		FCollisionObjectQueryParams  GrondObjParams;
+		GrondObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel3);
+
+		bool bGround = GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, GrondObjParams, GroundParams);
+
+		if (!bGround)
+		{
+			bisFlying = true;
+			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+		}
+		else
+		{
+			bisFlying = false;
+			GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+		}
+	}
+
 	if (isLooking)
 	{
 		Move(DeltaTime);
+	}
+	else
+	{
+		if (!my_pawn) return;
+
+		FVector TargetActor = ori_pos - my_pawn->GetActorLocation();
+
+		FRotator LookatTarget = TargetActor.Rotation();
+		FRotator CurrentMyRot = my_pawn->GetActorRotation();
+
+		FRotator NewRotate = FMath::RInterpTo(
+			CurrentMyRot,
+			LookatTarget,
+			DeltaTime,
+			rotate_speed
+		);
+
+		//プレイヤーを見る
+		my_pawn->SetActorRotation(NewRotate);
+
+		if (TargetActor.Y < 0)
+		{
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+			const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+			AddMovementInput(ForwardDirection, move_speed);
+
+		}
 	}
 }
 
@@ -165,30 +226,7 @@ void AEnemyCharacter::Archeop()
 
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		AddMovementInput(ForwardDirection, move_speed);		
-
-		FHitResult Hit;
-		FVector Start = GetActorLocation();
-		FVector End = Start - FVector(0, 0, 200); // 200cm下にRay
-
-		FHitResult GroundHit;
-		FCollisionQueryParams GroundParams;
-		GroundParams.AddIgnoredActor(this);
-		FCollisionObjectQueryParams  GrondObjParams;
-		GrondObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel3);
-
-		bool bGround = GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, GrondObjParams, GroundParams);
-
-		if (!bGround)
-		{
-			bisFlying = true;
-			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-		}
-		else
-		{
-			bisFlying = false;
-			GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-		}
+		AddMovementInput(ForwardDirection, move_speed);
 	}
 }
 
@@ -207,9 +245,11 @@ void AEnemyCharacter::Attack()
 	if (!isFly_enemy && !bisAttacking)
 	{
 		bisAttacking = true;
-		Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 		{
+			// クールタイム開始
+			Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 			FOnMontageEnded EndDelegate;
 			EndDelegate.BindUObject(this, &AEnemyCharacter::OnAttackMontageEnded);
@@ -227,7 +267,6 @@ void AEnemyCharacter::Attack()
 
 void AEnemyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	// クールタイム開始
 	GetWorld()->GetTimerManager().SetTimer(
 		timer_handle,
 		this,
@@ -239,24 +278,30 @@ void AEnemyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrup
 
 void AEnemyCharacter::ResetAttack()
 {
-	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	bisAttacking = false;
 }
 
-void AEnemyCharacter::OnHitOverlap
-	(UPrimitiveComponent* OverlappedComp,AActor* OtherActor,UPrimitiveComponent* OtherComp,int32 OtherBodyIndex,bool bFromSweep,const FHitResult& SweepResult)
+void AEnemyCharacter::OnHitOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (AMyCharacter* CharacterClass = Cast<AMyCharacter>(OtherActor))
 	{
-		CharacterClass->HP -= attck_damage;
-		if (HP <= 0)
+		if (CharacterClass->HP > attck_damage)
 		{
+			CharacterClass->HP -= attck_damage;
 
-			if (AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
+			UE_LOG(LogTemp, Warning, TEXT("%d"), CharacterClass->HP);
+		}
+		else
+		{
+			if (CharacterClass->HP < attck_damage)
 			{
-				GameMode->KillPlayer(CharacterClass);
+				if (AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
+				{
+					SetActorLocation(ori_pos);
+
+					GameMode->KillPlayer(CharacterClass);
+				}
 			}
 		}
-		UE_LOG(LogTemp, Warning, TEXT("%d"),CharacterClass->HP);
 	}
 }

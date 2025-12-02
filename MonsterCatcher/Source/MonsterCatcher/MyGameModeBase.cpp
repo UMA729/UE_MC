@@ -3,6 +3,7 @@
 
 #include "MyGameModeBase.h"
 #include "MyCharacter.h"
+#include "EnemyCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
@@ -15,7 +16,6 @@ AMyGameModeBase::AMyGameModeBase()
 	{
 		DefaultPawnClass = PlayerBPClass.Class;
 		PlayerClass = PlayerBPClass.Class;
-
 	}
 }
 

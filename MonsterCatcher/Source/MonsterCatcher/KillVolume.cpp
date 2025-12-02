@@ -49,4 +49,10 @@ void AKillVolume::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 			GameMode->KillPlayer(Player);
 		}
 	}
+	if (AEnemyCharacter* Enemy = Cast<AEnemyCharacter>(OtherActor))
+	{
+		OtherActor->SetActorLocation(Enemy->ori_pos);
+		if(Enemy->isLooking)
+		Enemy->isLooking = false;
+	}
 }

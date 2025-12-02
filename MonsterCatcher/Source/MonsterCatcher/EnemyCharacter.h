@@ -113,4 +113,6 @@ public:
 
 	AActor*player_actor;
 
+	FVector ori_pos;
+
 };

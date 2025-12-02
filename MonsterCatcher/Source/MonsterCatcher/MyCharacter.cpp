@@ -259,7 +259,7 @@ void AMyCharacter::Tick(float DeltaTime)
 
 		// ←今までは Max で強制的に縮めていたが、
 		//    ここを滑らかな補間に変える
-		float InterpSpeed = 25.f; // ← 速くしたいなら20〜30にしてOK
+		float InterpSpeed = 200.f; // ← 速くしたいなら20〜30にしてOK
 
 		CurrentCableLength = FMath::FInterpTo(
 			CurrentCableLength,   // 現在の長さ

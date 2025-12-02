@@ -11,12 +11,23 @@ AThrowKnifeActor::AThrowKnifeActor()
 {
 
 	KunaiCollision = CreateDefaultSubobject<USphereComponent>(TEXT("ShereComp"));
-	KunaiCollision->InitSphereRadius(5.0f);
+	KunaiCollision->InitSphereRadius(10.0f);
 	KunaiCollision->BodyInstance.SetCollisionProfileName("Projectile");
-	KunaiCollision->OnComponentHit.AddDynamic(this, &AThrowKnifeActor::OnHit);		// set up a notification for when this component hits something blocking
 
-	KunaiCollision->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
-	KunaiCollision->CanCharacterStepUpOn = ECB_No;
+	KunaiCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	KunaiCollision->SetCollisionObjectType(ECC_WorldDynamic);
+
+	// Hit ‚ðŽg‚¤‚½‚ß Pawn ‚ð Block ‚É‚·‚éiOverlap ‚Å‚Í Hit ‚Ío‚È‚¢j
+	KunaiCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
+	KunaiCollision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+	KunaiCollision->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+
+	KunaiCollision->SetNotifyRigidBodyCollision(true); // OnHit ‚É•K{
+	KunaiCollision->SetGenerateOverlapEvents(false);   // Overlap ‚ÍŽg‚í‚È‚¢
+
+	// ‚·‚è”²‚¯–hŽ~ (‚‘¬Projectile‚É•K{)
+	KunaiCollision->BodyInstance.bUseCCD = true;
+
 
 	RootComponent = KunaiCollision;
 
@@ -26,7 +37,8 @@ AThrowKnifeActor::AThrowKnifeActor()
 	ProjectileMovement->MaxSpeed = 1500.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
-	//ProjectileMovement->
+
+	KunaiCollision->OnComponentHit.AddDynamic(this, &AThrowKnifeActor::OnHit);		// set up a notification for when this component hits something blocking
 
 	knife_damage = 50.f;
 
@@ -36,12 +48,14 @@ AThrowKnifeActor::AThrowKnifeActor()
 void AThrowKnifeActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+	UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"),		*GetNameSafe(OtherActor));
+
+	if (AEnemyCharacter* EnemyClass = Cast<AEnemyCharacter>(OtherActor))
 	{
-		if (AEnemyCharacter* EnemyClass = Cast<AEnemyCharacter>(OtherActor))
-		{
-			EnemyClass->HP -= knife_damage;
-		}
+		EnemyClass->HP -= knife_damage;
+
+		UE_LOG(LogTemp, Warning, TEXT("EnemyHit"));
+
 		Destroy();
 	}
 }

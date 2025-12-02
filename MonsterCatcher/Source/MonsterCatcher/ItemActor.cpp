@@ -57,8 +57,6 @@ void AItemActor::Tick(float DeltaTime)
 
 void AItemActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlapî≠ê∂!"));
-	if (TargetWall) UE_LOG(LogTemp, Warning, TEXT("TargetWallÇ†ÇÈÇÊ"));
 
 	if (AMyCharacter* character = Cast<AMyCharacter>(OtherActor))
 	{
