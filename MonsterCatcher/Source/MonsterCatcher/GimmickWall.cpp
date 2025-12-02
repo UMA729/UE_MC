@@ -10,6 +10,9 @@ AGimmickWall::AGimmickWall()
 	PrimaryActorTick.bCanEverTick = true;
 
 	WallMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WallMesh"));
+	WallMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	WallMesh->SetCollisionProfileName(TEXT("BlockAll"));
+
 	RootComponent = WallMesh;
 }
 

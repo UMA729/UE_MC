@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ThrowKnifeActor.h"
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
@@ -10,12 +11,23 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class AThrowKnifeActor;
 struct FInputActionValue;
 
 UCLASS()
 class MONSTERCATCHER_API AMyCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+public:
+	// Sets default values for this character's properties
+	AMyCharacter();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite,Category=knife)
+	TSubclassOf<AThrowKnifeActor>KnifeClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
+	UAnimMontage* AttackMontage;
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -44,14 +56,6 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
-
-	/**ZoomIn Action*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* ZoomInAction;
-
-	/**ZoomOut Action*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* ZoomOutAction;
 	
 	/**Run Input Action*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -62,6 +66,9 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* GrappleAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ThrowAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grapple, meta = (AllowPrivateAccess = "true"))
 	class UCableComponent*GrappleCable;
@@ -99,9 +106,6 @@ class MONSTERCATCHER_API AMyCharacter : public ACharacter
 	// ƒŒƒC‚ª–½’†‚µ‚½‚©
 	bool bHasHitTarget = false;
 
-public:
-	// Sets default values for this character's properties
-	AMyCharacter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -113,9 +117,6 @@ protected:
 
 	void Look(const FInputActionValue& Value);
 
-	void ZoomIn(const FInputActionValue& Value);
-	void ZoomOut(const FInputActionValue& Value);
-
 	void Pers(const FInputActionValue& Value);
 
 	void Run(const FInputActionValue& Value);
@@ -123,6 +124,8 @@ protected:
 
 	void Grappling(const FInputActionValue& Value);
 	void StopGrapple(const FInputActionValue& Value);
+
+	void Fire(const FInputActionValue& Value);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

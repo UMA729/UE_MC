@@ -3,9 +3,11 @@
 
 #include "MyCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "Camera/PlayerCameraManager.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/PlayerController.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -13,6 +15,8 @@
 #include "CableComponent.h"
 #include "DrawDebugHelpers.h"
 #include "GoalActor.h"
+#include "Engine/LocalPlayer.h"
+#include "Engine/World.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -112,6 +116,12 @@ void AMyCharacter::NotifyControllerChanged()
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (HP <= 0)
+	{
+
+	}
+
 	// ケーブル飛翔中（伸ばし中）
 	if (bIsFiringGrapple)
 	{
@@ -249,7 +259,7 @@ void AMyCharacter::Tick(float DeltaTime)
 
 		// ←今までは Max で強制的に縮めていたが、
 		//    ここを滑らかな補間に変える
-		float InterpSpeed = 12.f; // ← 速くしたいなら20〜30にしてOK
+		float InterpSpeed = 25.f; // ← 速くしたいなら20〜30にしてOK
 
 		CurrentCableLength = FMath::FInterpTo(
 			CurrentCableLength,   // 現在の長さ
@@ -316,17 +326,17 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputConponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyCharacter::Move);			//移動
 																														
 		EnhancedInputConponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);			//視点移動
-																														
-		//EnhancedInputConponent->BindAction(ZoomInAction, ETriggerEvent::Triggered, this, &AMyCharacter::ZoomIn);		//カメラズームイン
-		//EnhancedInputConponent->BindAction(ZoomOutAction, ETriggerEvent::Triggered, this, &AMyCharacter::ZoomOut);		//カメラズームアウト
-																														
+																																																											
 		//EnhancedInputConponent->BindAction(PersAction, ETriggerEvent::Started, this, &AMyCharacter::Pers);				//視点切り替え
 																														
 		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AMyCharacter::Run);				//ダッシュ
 		//EnhancedInputConponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AMyCharacter::StopRun);
 
 		EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Started, this, &AMyCharacter::Grappling);			//ダッシュ停止
+		EnhancedInputConponent->BindAction(ThrowAction, ETriggerEvent::Started, this, &AMyCharacter::Fire);			//ダッシュ停止
 		//EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Completed, this, &AMyCharacter::StopGrapple);			//ダッシュ停止
+
+
 	}
 }
 
@@ -366,20 +376,6 @@ void AMyCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-//ズームイン
-void AMyCharacter::ZoomIn(const FInputActionValue& Value)
-{
-	if (CameraBoom->TargetArmLength > 200)
-	CameraBoom->TargetArmLength -= 30;
-}
-
-//ズームアウト
-void AMyCharacter::ZoomOut(const FInputActionValue& Value)
-{
-	if (CameraBoom->TargetArmLength < 600)
-	CameraBoom->TargetArmLength += 30;
-}
-
 //視点切り替え
 void AMyCharacter::Pers(const FInputActionValue& Value)
 {
@@ -414,6 +410,11 @@ void AMyCharacter::StopRun(const FInputActionValue& Value)
 //グラップル
 void AMyCharacter::Grappling(const FInputActionValue& Value)
 {
+	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	{
+		if(AnimInstance->Montage_IsPlaying(AttackMontage))
+			AnimInstance->Montage_Stop(0.25f, AttackMontage); // blend out 0.25秒
+	}
 	if (bIsFiringGrapple) return;
 
 	if (!isGrappling)
@@ -465,4 +466,53 @@ void AMyCharacter::StopGrapple(const FInputActionValue& Value)
 
 	// 通常の移動に戻す
 	GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+}
+
+void AMyCharacter::Fire(const FInputActionValue& Value)
+{
+	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	{
+		if (!AnimInstance->Montage_IsPlaying(AttackMontage) && !isGrappling)
+		{
+			FOnMontageEnded EndDelegate;
+			AnimInstance->Montage_Play(AttackMontage);
+			AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
+		}
+	}
+
+	if (KnifeClass != nullptr)
+	{
+		UWorld* const World = GetWorld();
+
+		if (World != nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("in world"));
+			// 自分を操作している Controller を取得
+			APlayerController* PlayerController = Cast<APlayerController>(GetController());
+			if (PlayerController == nullptr)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("PlayerController NULL"));
+				return;
+			}
+
+			// カメラの向き（プレイヤーの場合）
+			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
+
+			FVector MuzzleOffset = FVector(100.f, 0.f, 80.f); // 必要なら変更
+			const FVector SpawnLocation = GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
+
+			//Set Spawn Collision Handling Override
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+
+			World->SpawnActor<AThrowKnifeActor>(KnifeClass,SpawnLocation,SpawnRotation,ActorSpawnParams);
+
+		}
+	}
+	else
+	{
+
+		UE_LOG(LogTemp, Warning, TEXT("no class"));
+	}
 }

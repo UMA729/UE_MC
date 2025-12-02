@@ -3,6 +3,7 @@
 
 #include "EnemyCharacter.h"
 #include "MyCharacter.h"
+#include "MyGameModeBase.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -22,17 +23,20 @@ AEnemyCharacter::AEnemyCharacter()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::OnHitOverlap);
 
-	Sphere->SetupAttachment(RootComponent);
+	Sphere->InitSphereRadius(80.f);
 
-	Sphere->SetSphereRadius(100.0f);
-
-	Sphere->SetCollisionResponseToAllChannels(ECR_Overlap);
-	Sphere->SetCollisionObjectType(ECC_WorldDynamic);
+	Sphere->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	Sphere->SetupAttachment(GetMesh());
 
 	Sphere->SetGenerateOverlapEvents(true);
 
-	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Sphere->SetHiddenInGame(false);             // ゲーム中に見える
+	Sphere->bHiddenInGame = false;              // 念のため
+	Sphere->SetVisibility(true);
+
+
 
 	//Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	isLooking = false;
@@ -44,21 +48,39 @@ AEnemyCharacter::AEnemyCharacter()
 	move_speed = 0.5f;
 
 	attck_damage = 10.0f;
+
+	HP = 100.0f;
 }
 
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::OnSphereBeginOverlap);
-	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
+	if (isHyena)
+	{
+		HP = 100;
+	}
+	else if (isArcheop)
+	{
+		HP = 50;
+	}
+	else if (isFly_enemy)
+	{
+
+	}
+
 }
 
 // Called every frame  SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (HP < 0)
+	{
+		Destroy();
+	}
 	if (isLooking)
 	{
 		Move(DeltaTime);
@@ -74,6 +96,7 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AEnemyCharacter::Move(float Deltatime)
 {
+	if (!my_pawn && !player_actor) return;
 	float distance = FVector::Dist(player_actor->GetActorLocation(), my_pawn->GetActorLocation());
 
 	if (distance > stop_distance)
@@ -99,68 +122,37 @@ void AEnemyCharacter::Move(float Deltatime)
 		Attack();
 	}
 
-	if (!my_pawn && !player_actor) return;
+	//プレイヤーとの距離をとる
+	FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
+	//縦の追跡はなし
+	TargetActor.Z = 0;
 
-	if (!isHyena)
-	{
-		//プレイヤーとの距離をとる
-		FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
-		//縦の追跡はなし
-		TargetActor.Z = 0;
+	FRotator LookatTarget = TargetActor.Rotation();
+	FRotator CurrentMyRot = my_pawn->GetActorRotation();
 
-		FRotator LookatTarget = TargetActor.Rotation();
-		FRotator CurrentMyRot = my_pawn->GetActorRotation();
+	FRotator NewRotate = FMath::RInterpTo(
+		CurrentMyRot,
+		LookatTarget,
+		Deltatime,
+		rotate_speed
+	);
 
-		FRotator NewRotate = FMath::RInterpTo(
-			CurrentMyRot,
-			LookatTarget,
-			Deltatime,
-			rotate_speed
-		);
-
-		//プレイヤーを見る
-		my_pawn->SetActorRotation(NewRotate);
-	}
+	//プレイヤーを見る
+	my_pawn->SetActorRotation(NewRotate);
 }
+
 
 void AEnemyCharacter::Hyena(float Deltatime)
 {
 	if (Controller != nullptr)
 	{
-		if (isLocking)
-		{
-
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
 		AddMovementInput(ForwardDirection, move_speed);
-		}
-		else
-		{
-			//プレイヤーとの距離をとる
-			FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
-			//縦の追跡はなし
-			TargetActor.Z = 0;
-
-			FRotator LookatTarget = TargetActor.Rotation();
-			FRotator CurrentMyRot = my_pawn->GetActorRotation();
-
-			FRotator NewRotate = FMath::RInterpTo(
-				CurrentMyRot,
-				LookatTarget,
-				Deltatime,
-				rotate_speed
-			);
-
-			//プレイヤーを見る
-			my_pawn->SetActorRotation(NewRotate);
-		}
 	}
-
-	
-
 }
 
 void AEnemyCharacter::Archeop()
@@ -173,8 +165,7 @@ void AEnemyCharacter::Archeop()
 
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		AddMovementInput(ForwardDirection, move_speed);
-
+		AddMovementInput(ForwardDirection, move_speed);		
 
 		FHitResult Hit;
 		FVector Start = GetActorLocation();
@@ -206,7 +197,7 @@ void AEnemyCharacter::FlyEnemy()
 
 }
 
-void AEnemyCharacter::Dash()
+void AEnemyCharacter::Run()
 {
 
 }
@@ -216,8 +207,10 @@ void AEnemyCharacter::Attack()
 	if (!isFly_enemy && !bisAttacking)
 	{
 		bisAttacking = true;
+		Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 		{
+
 			FOnMontageEnded EndDelegate;
 			EndDelegate.BindUObject(this, &AEnemyCharacter::OnAttackMontageEnded);
 
@@ -234,11 +227,9 @@ void AEnemyCharacter::Attack()
 
 void AEnemyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// クールタイム開始
 	GetWorld()->GetTimerManager().SetTimer(
-		attack_cooldown,
+		timer_handle,
 		this,
 		&AEnemyCharacter::ResetAttack,
 		cooldown_time,
@@ -248,14 +239,24 @@ void AEnemyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrup
 
 void AEnemyCharacter::ResetAttack()
 {
+	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	bisAttacking = false;
 }
 
-void AEnemyCharacter::OnSphereBeginOverlap
-	(UPrimitiveComponent* OverlappedComp,AActor* OtherActor,UPrimitiveComponent* OtherComp,	int32 OtherBodyIndex,bool bFromSweep,const FHitResult& SweepResult)
+void AEnemyCharacter::OnHitOverlap
+	(UPrimitiveComponent* OverlappedComp,AActor* OtherActor,UPrimitiveComponent* OtherComp,int32 OtherBodyIndex,bool bFromSweep,const FHitResult& SweepResult)
 {
 	if (AMyCharacter* CharacterClass = Cast<AMyCharacter>(OtherActor))
 	{
-		
+		CharacterClass->HP -= attck_damage;
+		if (HP <= 0)
+		{
+
+			if (AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
+			{
+				GameMode->KillPlayer(CharacterClass);
+			}
+		}
+		UE_LOG(LogTemp, Warning, TEXT("%d"),CharacterClass->HP);
 	}
 }

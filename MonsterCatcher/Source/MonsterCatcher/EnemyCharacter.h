@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "EnemyCharacter.generated.h"
 
 class USphereComponent;
@@ -41,7 +42,9 @@ public:
 	//飛行フラグ
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	bool bisFlying;
-	
+
+	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	float HP;
 	// Sets default values for this character's properties
 
 protected:
@@ -51,7 +54,7 @@ protected:
 private:
 
 	UFUNCTION()
-	void OnSphereBeginOverlap(
+	void OnHitOverlap(
 		UPrimitiveComponent* OverlappedComp,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
@@ -63,6 +66,7 @@ private:
 	/** 接触判定用のCollision : Sphere */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Goal, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USphereComponent> Sphere;
+
 	//移動速度
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	float move_speed;
@@ -71,6 +75,7 @@ private:
 	float cooldown_time;
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	float attck_damage;
+	
 public:	
 	APawn* my_pawn;
 
@@ -88,8 +93,6 @@ public:
 	void Archeop();
 	//飛行キャラ挙動
 	void FlyEnemy();
-	//敵：ダッシュ
-	void Dash();
 	//敵：攻撃
 	void Attack();
 	//モンタージュ待ち
@@ -97,14 +100,16 @@ public:
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	//敵：攻撃ストップ
 	void ResetAttack();
+	//敵：ダッシュ;
+	void Run();
 
 	float rotate_speed;
 
 	bool isLooking;
 	bool isRush;
-	bool isLocking;
+	bool isTargeting;
 
-	FTimerHandle attack_cooldown;
+	FTimerHandle timer_handle;
 
 	AActor*player_actor;
 

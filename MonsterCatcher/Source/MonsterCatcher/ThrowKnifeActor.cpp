@@ -2,21 +2,21 @@
 
 
 #include "ThrowKnifeActor.h"
+#include "EnemyCharacter.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
 // Sets default values
 AThrowKnifeActor::AThrowKnifeActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 
 	KunaiCollision = CreateDefaultSubobject<USphereComponent>(TEXT("ShereComp"));
 	KunaiCollision->InitSphereRadius(5.0f);
 	KunaiCollision->BodyInstance.SetCollisionProfileName("Projectile");
-	//KunaiCollision->OnComponentHit.AddDynamic(this, &AThrowKnifeActor::OnHit);
+	KunaiCollision->OnComponentHit.AddDynamic(this, &AThrowKnifeActor::OnHit);		// set up a notification for when this component hits something blocking
 
 	KunaiCollision->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
+	KunaiCollision->CanCharacterStepUpOn = ECB_No;
 
 	RootComponent = KunaiCollision;
 
@@ -27,8 +27,21 @@ AThrowKnifeActor::AThrowKnifeActor()
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
 	//ProjectileMovement->
+
+	knife_damage = 50.f;
+
+	InitialLifeSpan = 3.0f;
 }
 
-//void AThrowKnifeActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-//{
-//}
+void AThrowKnifeActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	// Only add impulse and destroy projectile if we hit a physics
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+	{
+		if (AEnemyCharacter* EnemyClass = Cast<AEnemyCharacter>(OtherActor))
+		{
+			EnemyClass->HP -= knife_damage;
+		}
+		Destroy();
+	}
+}
