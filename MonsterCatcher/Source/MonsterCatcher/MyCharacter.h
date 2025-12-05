@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "ThrowKnifeActor.h"
-#include "UI_UserWidget.h"
 #include "GameFramework/Character.h"
 #include "Blueprint/UserWidget.h"
 #include "MyCharacter.generated.h"
 
+class UUI_UserWidget;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -103,7 +103,7 @@ public:
 	int HP;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
-	TSubclassOf<UUI_UserWidget> UIWidgetClass;
+	TSubclassOf<UUserWidget> UIWidgetClass;
 
 	UUI_UserWidget* MainWidgetInstance;
 

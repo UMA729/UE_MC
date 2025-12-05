@@ -2,6 +2,7 @@
 
 
 #include "MyCharacter.h"
+#include "UI_UserWidget.h"
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -77,9 +78,12 @@ void AMyCharacter::BeginPlay()
 
 	if (UIWidgetClass)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("UIWiget"));
 		MainWidgetInstance = CreateWidget<UUI_UserWidget>(GetWorld(), UIWidgetClass);
+	
 		if (MainWidgetInstance)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Instance"));
 			MainWidgetInstance->AddToViewport();
 		}
 	}
@@ -113,7 +117,7 @@ void AMyCharacter::Damage(float damage)
 
 	if (MainWidgetInstance)
 	{
-		MainWidgetInstance->SetHPPercent(damage);
+		MainWidgetInstance->SetHPPercent(HP/100);
 	}
 }
 
@@ -137,10 +141,6 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (HP <= 0)
-	{
-
-	}
 
 	// ケーブル飛翔中（伸ばし中）
 	if (bIsFiringGrapple)

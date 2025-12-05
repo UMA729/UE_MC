@@ -8,6 +8,7 @@ void UUI_UserWidget::SetHPPercent(float Percent)
 {
     if (HPBar)
     {
+        UE_LOG(LogTemp, Warning, TEXT("%f"),Percent);
         HPBar->SetPercent(Percent);
     }
 }
