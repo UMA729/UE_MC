@@ -3,3 +3,11 @@
 
 #include "UI_UserWidget.h"
 
+
+void UUI_UserWidget::SetHPPercent(float Percent)
+{
+    if (HPBar)
+    {
+        HPBar->SetPercent(Percent);
+    }
+}

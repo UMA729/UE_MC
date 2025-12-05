@@ -4,6 +4,7 @@
 #include "EnemyCharacter.h"
 #include "MyCharacter.h"
 #include "MyGameModeBase.h"
+#include "EnemyAIController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -48,7 +49,7 @@ AEnemyCharacter::AEnemyCharacter()
 
 	move_speed = 0.5f;
 
-	attck_damage = 10.0f;
+	attack_damage = 10.0f;
 
 	HP = 100.0f;
 }
@@ -62,19 +63,14 @@ void AEnemyCharacter::BeginPlay()
 
 	ori_pos = GetActorLocation();
 
-	if (isHyena)
+	if (auto* Ctrl = Cast<AEnemyAIController>(GetController()))
 	{
-		HP = 100;
-	}
-	else if (isArcheop)
-	{
-		HP = 50;
-	}
-	else if (isFly_enemy)
-	{
+		Ctrl->SightConfig->SightRadius = SightRadius;
+		Ctrl->SightConfig->LoseSightRadius = LoseSightRadius;
+		Ctrl->SightConfig->PeripheralVisionAngleDegrees = SightAngle;
 
+		Ctrl->PerceptionCmp->RequestStimuliListenerUpdate();
 	}
-
 }
 
 // Called every frame  SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
@@ -285,22 +281,19 @@ void AEnemyCharacter::OnHitOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 {
 	if (AMyCharacter* CharacterClass = Cast<AMyCharacter>(OtherActor))
 	{
-		if (CharacterClass->HP > attck_damage)
+		if (CharacterClass->HP > attack_damage)
 		{
-			CharacterClass->HP -= attck_damage;
+			CharacterClass->Damage(attack_damage);
 
 			UE_LOG(LogTemp, Warning, TEXT("%d"), CharacterClass->HP);
 		}
-		else
+		else if (CharacterClass->HP < attack_damage)
 		{
-			if (CharacterClass->HP < attck_damage)
+			if (AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
 			{
-				if (AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
-				{
-					SetActorLocation(ori_pos);
+				SetActorLocation(ori_pos);
 
-					GameMode->KillPlayer(CharacterClass);
-				}
+				GameMode->KillPlayer(CharacterClass);
 			}
 		}
 	}

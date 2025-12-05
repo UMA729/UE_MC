@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "ThrowKnifeActor.h"
+#include "UI_UserWidget.h"
 #include "GameFramework/Character.h"
+#include "Blueprint/UserWidget.h"
 #include "MyCharacter.generated.h"
 
 class USpringArmComponent;
@@ -100,13 +102,19 @@ public:
 
 	int HP;
 
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UUI_UserWidget> UIWidgetClass;
+
+	UUI_UserWidget* MainWidgetInstance;
+
+
 	// レイの現在位置（ケーブル先端）
 	FVector GrappleTip;
 
 	// レイが命中したか
 	bool bHasHitTarget = false;
 
-
+	void Damage(float damage);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

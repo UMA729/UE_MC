@@ -67,6 +67,7 @@ AMyCharacter::AMyCharacter()
 	Distance = 0.f;
 }
 
+
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
@@ -74,6 +75,14 @@ void AMyCharacter::BeginPlay()
 
 	GetMesh()->HideBoneByName(FName("head"), EPhysBodyOp::PBO_None);
 
+	if (UIWidgetClass)
+	{
+		MainWidgetInstance = CreateWidget<UUI_UserWidget>(GetWorld(), UIWidgetClass);
+		if (MainWidgetInstance)
+		{
+			MainWidgetInstance->AddToViewport();
+		}
+	}
 	/*if (isPers)
 	{
 		if (FirstPersonCamera && ThirdPersonCamera)
@@ -97,6 +106,17 @@ void AMyCharacter::BeginPlay()
 		GrappleCable->SetRelativeRotation(FRotator::ZeroRotator);
 	}*/
 }
+
+void AMyCharacter::Damage(float damage)
+{
+	HP -= damage;
+
+	if (MainWidgetInstance)
+	{
+		MainWidgetInstance->SetHPPercent(damage);
+	}
+}
+
 
 void AMyCharacter::NotifyControllerChanged()
 {

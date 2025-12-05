@@ -18,6 +18,15 @@ class MONSTERCATCHER_API AEnemyCharacter : public ACharacter
 public:
 	AEnemyCharacter();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float SightRadius = 1000.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float LoseSightRadius = 1200.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float SightAngle = 360.f;
+
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	float attack_radius;
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
@@ -52,7 +61,6 @@ protected:
 	virtual void BeginPlay()override;
 
 private:
-
 	UFUNCTION()
 	void OnHitOverlap(
 		UPrimitiveComponent* OverlappedComp,
@@ -74,7 +82,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	float cooldown_time;
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
-	float attck_damage;
+	float attack_damage;
 	
 public:	
 	APawn* my_pawn;
