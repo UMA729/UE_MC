@@ -60,13 +60,13 @@ void AEnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 				//Œ©‚Â‚©‚Á‚½”»’è
 				EnemyClass->isLooking = true;
 			}
-		/*	else
+			else
 			{
 				UE_LOG(LogTemp, Warning, TEXT("leaveF%s"), *Actor->GetName());
 
 				EnemyClass->isLooking = false;
 				EnemyClass->ResetAttack();
-			}*/
+			}
 		}
 	}
 }
