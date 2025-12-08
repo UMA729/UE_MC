@@ -65,7 +65,7 @@ void AEnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 				UE_LOG(LogTemp, Warning, TEXT("leaveF%s"), *Actor->GetName());
 
 				EnemyClass->isLooking = false;
-				EnemyClass->ResetAttack();
+				EnemyClass->bisAttacking = false;
 			}
 		}
 	}

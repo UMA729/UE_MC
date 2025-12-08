@@ -116,6 +116,7 @@ public:
 	bool isLooking;
 	bool isRush;
 	bool isTargeting;
+	bool isGround;
 
 	FTimerHandle timer_handle;
 

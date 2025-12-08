@@ -100,7 +100,7 @@ public:
 	float TargetCableLength;  // ケーブルの目標長さ
 	float Distance;
 
-	int HP;
+	float HP;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UUserWidget> UIWidgetClass;

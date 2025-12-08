@@ -117,7 +117,7 @@ void AMyCharacter::Damage(float damage)
 
 	if (MainWidgetInstance)
 	{
-		MainWidgetInstance->SetHPPercent(HP/100);
+		MainWidgetInstance->SetHPPercent(HP/100.f);
 	}
 }
 

@@ -32,6 +32,8 @@ void AMyGameModeBase::BeginPlay()
 
 void AMyGameModeBase::KillPlayer(AMyCharacter* Player)
 {
+
+
 	//Player‚ð”jŠü
 	Player->Destroy();
 

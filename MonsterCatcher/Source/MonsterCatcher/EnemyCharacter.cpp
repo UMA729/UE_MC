@@ -77,12 +77,13 @@ void AEnemyCharacter::BeginPlay()
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	if (HP < 0)
 	{
 		Destroy();
 	}
 
-	if (isArcheop)
+	if (isArcheop )
 	{
 		FHitResult Hit;
 		FVector Start = GetActorLocation();
@@ -96,14 +97,16 @@ void AEnemyCharacter::Tick(float DeltaTime)
 
 		bool bGround = GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, GrondObjParams, GroundParams);
 
-		if (!bGround)
+		if (!bGround && !isGround)
 		{
 			bisFlying = true;
+			isGround = true;
 			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 		}
-		else
+		else if(isGround)
 		{
 			bisFlying = false;
+			isGround = false;
 			GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 		}
 	}
@@ -128,7 +131,6 @@ void AEnemyCharacter::Tick(float DeltaTime)
 			rotate_speed
 		);
 
-		//ƒvƒŒƒCƒ„[‚ðŒ©‚é
 		my_pawn->SetActorRotation(NewRotate);
 
 		if (TargetActor.Y < 0)
@@ -285,15 +287,17 @@ void AEnemyCharacter::OnHitOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 		{
 			CharacterClass->Damage(attack_damage);
 
-			UE_LOG(LogTemp, Warning, TEXT("%d"), CharacterClass->HP);
+			UE_LOG(LogTemp, Warning, TEXT("%f"), CharacterClass->HP);
 		}
-		else if (CharacterClass->HP < attack_damage)
+		else
 		{
 			if (AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
 			{
 				SetActorLocation(ori_pos);
 
 				GameMode->KillPlayer(CharacterClass);
+				bisAttacking = false;
+				isLooking = false;
 			}
 		}
 	}
