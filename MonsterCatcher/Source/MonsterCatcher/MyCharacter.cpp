@@ -157,24 +157,31 @@ void AMyCharacter::Tick(float DeltaTime)
 		//AdjustedDir.Normalize(); // 正規化し直す（重要）
 
 		//ここでXが+されてしまうのが原因 == ×
-		GrappleTip = GrappleStart + GrappleDir * CurrentCableLength;
+		//GrappleTip = GrappleStart + GrappleDir * CurrentCableLength;
 
 		//UE_LOG(LogTemp, Warning, TEXT("%f,%f,%f"), GrappleTip.X, GrappleTip.Y, GrappleTip.Z);
 		// レイを都度飛ばす（先端まで）
 		//グラップル天井用レイ
+		bool gHit;
 		FHitResult GraHit;
 		FCollisionQueryParams GrappleParams;
 		GrappleParams.AddIgnoredActor(this);
 		FCollisionObjectQueryParams  GraObjParams;
 		GraObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel1);
 		//ギミック用レイ
+		bool bHit;
 		FHitResult GimHit;
 		FCollisionQueryParams GimmickParams;
 		GimmickParams.AddIgnoredActor(this);
 		FCollisionObjectQueryParams  GimObjParams;
 		GimObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel2);
 
-		bool gHit = GetWorld()->LineTraceSingleByObjectType(
+		
+
+
+		GrappleTip = GrappleStart + GrappleDir * CurrentCableLength;
+
+		gHit = GetWorld()->LineTraceSingleByObjectType(
 			GraHit,
 			GrappleStart,
 			GrappleTip,
@@ -182,7 +189,7 @@ void AMyCharacter::Tick(float DeltaTime)
 			GrappleParams
 		);
 
-		bool bHit = GetWorld()->LineTraceSingleByObjectType(
+		bHit = GetWorld()->LineTraceSingleByObjectType(
 			GimHit,
 			GrappleStart,
 			GrappleTip,
@@ -190,6 +197,42 @@ void AMyCharacter::Tick(float DeltaTime)
 			GimmickParams
 		);
 		
+		//--------------追加--------------------------
+		// 伸ばす予定の先端位置
+		if (!bHit && !gHit)
+		{
+
+			FVector DesiredTip = GrappleStart + GrappleDir * CurrentCableLength;
+
+			// 先にブロッカー判定（壁など）
+			FHitResult BlockHit;
+			bool bBlocked = GetWorld()->LineTraceSingleByChannel(
+				BlockHit,
+				GrappleStart,
+				DesiredTip,
+				ECC_Visibility // 壁・床が Block の TraceChannel
+			);
+
+			// ブロックされていたら、そこで止める
+			if (bBlocked)
+			{
+				GrappleTip = BlockHit.Location; // 壁まで
+				//グラップル停止
+				bIsFiringGrapple = false;
+				GrappleCable->SetVisibility(false);
+				if (GrappleAnchor)
+				{
+					GrappleAnchor->DestroyComponent();
+					GrappleAnchor = nullptr;
+				}
+
+				gHit = false;            // 天井にヒットしていない扱いに
+				bHit = false;            // 天井にヒットしていない扱いに
+				return;                         // ★ここで処理終了が重要！
+			}
+		}
+		//---------------------------------------------
+
 		if (bHit)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("HitActor: %s"), *GimHit.GetActor()->GetName());
@@ -441,7 +484,7 @@ void AMyCharacter::Grappling(const FInputActionValue& Value)
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 	{
 		if(AnimInstance->Montage_IsPlaying(AttackMontage))
-			AnimInstance->Montage_Stop(0.25f, AttackMontage); // blend out 0.25秒
+			AnimInstance->Montage_Stop(0.f, AttackMontage); // blend out 0.25秒
 	}
 	if (bIsFiringGrapple) return;
 

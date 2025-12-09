@@ -35,7 +35,7 @@ void AGoalActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (isGimmickGoal)
+	if (isGimmickGoal&&GoalText)
 		GoalText->SetActorHiddenInGame(true);
 	else
 		isGoal = true;

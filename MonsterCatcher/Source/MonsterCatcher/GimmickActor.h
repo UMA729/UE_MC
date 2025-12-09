@@ -26,8 +26,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* ButtonActor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* EnemyActor;
+	UPROPERTY(EditAnywhere, Category = "Gimmick")
+	TArray<AActor*> EnemyActors;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -44,5 +44,7 @@ private:
 	float MoveSpeed = 200.f;
 	float MoveDistance = 300.f;
 	float MoveSoFar = 0.f;
+	FVector ButtonStartLocation;
+	TArray<FVector> EnemyStartLocations;
 
 };

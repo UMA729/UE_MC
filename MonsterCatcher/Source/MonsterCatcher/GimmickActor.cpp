@@ -15,31 +15,34 @@ AGimmickActor::AGimmickActor()
 }
 
 // Called when the game starts or when spawned
+// BeginPlay
 void AGimmickActor::BeginPlay()
 {
-	Super::BeginPlay();
-	if (ButtonActor)
-	{
-		ButtonActor->SetActorHiddenInGame(true);
-		ButtonActor->SetActorEnableCollision(false);
-		ButtonActor->SetActorTickEnabled(false);
-	}
+    Super::BeginPlay();
 
-	if (EnemyActor)
-	{
-		EnemyActor->SetActorHiddenInGame(true);
-		EnemyActor->SetActorEnableCollision(false);
-		EnemyActor->SetActorTickEnabled(false);
-	}
+    if (ButtonActor)
+    {
+        ButtonStartLocation = ButtonActor->GetActorLocation();
+        ButtonActor->SetActorHiddenInGame(true);
+        ButtonActor->SetActorEnableCollision(false);
+        ButtonActor->SetActorTickEnabled(false);
+    }
 
+    EnemyStartLocations.Empty();
+    EnemyStartLocations.Reserve(EnemyActors.Num());
+    for (AActor* Enemy : EnemyActors)
+    {
+        if (!Enemy) continue;
+
+        EnemyStartLocations.Add(Enemy->GetActorLocation());
+
+        Enemy->SetActorHiddenInGame(true);
+        Enemy->SetActorEnableCollision(false);
+        Enemy->SetActorTickEnabled(false);
+    }
 }
 
-// Called every frame
-void AGimmickActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
 void AGimmickActor::Emerge()
 {
@@ -50,12 +53,23 @@ void AGimmickActor::Emerge()
 		ButtonActor->SetActorTickEnabled(true);
 	}
 
-	if (EnemyActor)
-	{
-		EnemyActor->SetActorHiddenInGame(false);
-		EnemyActor->SetActorEnableCollision(true);
-		EnemyActor->SetActorTickEnabled(true);
-	}
+    for (int32 i = 0; i < EnemyActors.Num(); ++i)
+    {
+        AActor* Enemy = EnemyActors[i];
+        if (!Enemy) continue;
+
+        Enemy->SetActorLocation(EnemyStartLocations[i]);
+        Enemy->SetActorHiddenInGame(false);
+        Enemy->SetActorEnableCollision(true);
+        Enemy->SetActorTickEnabled(true);
+    }
 
 }
 
+
+// Called every frame
+void AGimmickActor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
