@@ -1,62 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\",
+  "WorkspaceRootPath": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MovingActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\MovingActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\MyCharacter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MovingActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\MovingActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GimmickActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GoalActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GoalActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GoalActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GoalActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\ItemActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\ItemActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickWall.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GimmickWall.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\ItemActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\ItemActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\MyCharacter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\MyCharacter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GimmickActor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GimmickActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GoalActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GoalActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickWall.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GimmickWall.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\EnemyCharacter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\EnemyCharacter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\EnemyCharacter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\EnemyCharacter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickWall.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E6B644DC-1C79-3F68-8738-C09B0E8CD24E}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GimmickWall.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{4993793A-CE81-3585-9873-71A05C7A1BCC}|Intermediate\\ProjectFiles\\MonsterCatcher.vcxproj|solutionrelative:Source\\MonsterCatcher\\GimmickActor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -66,191 +30,72 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MovingActor.cpp",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MovingActor.cpp",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\MovingActor.cpp",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MovingActor.cpp",
-              "RelativeToolTip": "Source\\MonsterCatcher\\MovingActor.cpp",
-              "ViewState": "AQIAACMAAAAAAAAAAAAqwDwAAAAjAAAA",
+              "DocumentIndex": 2,
+              "Title": "GoalActor.cpp",
+              "DocumentMoniker": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GoalActor.cpp",
+              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\GoalActor.cpp",
+              "ToolTip": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GoalActor.cpp",
+              "RelativeToolTip": "Source\\MonsterCatcher\\GoalActor.cpp",
+              "ViewState": "AgIAAAwAAAAAAAAAAADwvyUAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-09T02:49:02.699Z",
+              "WhenOpened": "2025-12-09T07:21:43.455Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MovingActor.h",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MovingActor.h",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\MovingActor.h",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MovingActor.h",
-              "RelativeToolTip": "Source\\MonsterCatcher\\MovingActor.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAjAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-09T02:49:02.227Z",
+              "DocumentIndex": 0,
+              "Title": "MyCharacter.cpp",
+              "DocumentMoniker": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.cpp",
+              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\MyCharacter.cpp",
+              "ToolTip": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.cpp",
+              "RelativeToolTip": "Source\\MonsterCatcher\\MyCharacter.cpp",
+              "ViewState": "AgIAABECAAAAAAAAAAAAwCMCAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-12-09T06:27:59.943Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "ItemActor.h",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\ItemActor.h",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\ItemActor.h",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\ItemActor.h",
-              "RelativeToolTip": "Source\\MonsterCatcher\\ItemActor.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvwUAAAAgAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-09T01:41:07.673Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "GoalActor.cpp",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GoalActor.cpp",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\GoalActor.cpp",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GoalActor.cpp",
-              "RelativeToolTip": "Source\\MonsterCatcher\\GoalActor.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvwUAAAAjAAAA",
+              "Title": "GimmickWall.cpp",
+              "DocumentMoniker": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickWall.cpp",
+              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\GimmickWall.cpp",
+              "ToolTip": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickWall.cpp",
+              "RelativeToolTip": "Source\\MonsterCatcher\\GimmickWall.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-08T19:50:04.306Z"
+              "WhenOpened": "2025-12-09T06:00:28.193Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "GoalActor.h",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GoalActor.h",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\GoalActor.h",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GoalActor.h",
-              "RelativeToolTip": "Source\\MonsterCatcher\\GoalActor.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvwQAAAAYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-08T19:37:13.894Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 1,
               "Title": "GimmickActor.cpp",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.cpp",
+              "DocumentMoniker": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.cpp",
               "RelativeDocumentMoniker": "Source\\MonsterCatcher\\GimmickActor.cpp",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.cpp",
+              "ToolTip": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.cpp",
               "RelativeToolTip": "Source\\MonsterCatcher\\GimmickActor.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAuAAAA",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAAEAAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-08T19:46:39.621Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "GimmickActor.h",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.h",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\GimmickActor.h",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.h",
-              "RelativeToolTip": "Source\\MonsterCatcher\\GimmickActor.h",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAB0AAAAOAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-08T19:07:23.844Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "MyCharacter.cpp",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.cpp",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\MyCharacter.cpp",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.cpp",
-              "RelativeToolTip": "Source\\MonsterCatcher\\MyCharacter.cpp",
-              "ViewState": "AQIAAKoBAAAAAAAAAAAAALQBAAAHAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-08T18:26:06.12Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "MyCharacter.h",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.h",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\MyCharacter.h",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\MyCharacter.h",
-              "RelativeToolTip": "Source\\MonsterCatcher\\MyCharacter.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-08T18:17:11.055Z"
+              "WhenOpened": "2025-12-09T05:26:50.047Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "ItemActor.cpp",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\ItemActor.cpp",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\ItemActor.cpp",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\ItemActor.cpp",
-              "RelativeToolTip": "Source\\MonsterCatcher\\ItemActor.cpp",
-              "ViewState": "AQIAACoAAAAAAAAAAAAYwD8AAAACAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-08T18:17:50.516Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "GimmickWall.cpp",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickWall.cpp",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\GimmickWall.cpp",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickWall.cpp",
-              "RelativeToolTip": "Source\\MonsterCatcher\\GimmickWall.cpp",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAA0AAABBAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-08T17:01:21.074Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "GimmickWall.h",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickWall.h",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\GimmickWall.h",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickWall.h",
-              "RelativeToolTip": "Source\\MonsterCatcher\\GimmickWall.h",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAACoAAAAXAAAA",
+              "Title": "GimmickActor.h",
+              "DocumentMoniker": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.h",
+              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\GimmickActor.h",
+              "ToolTip": "C:\\Users\\GA2B\\Desktop\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\GimmickActor.h",
+              "RelativeToolTip": "Source\\MonsterCatcher\\GimmickActor.h",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAQwC8AAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-08T17:01:20.229Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "EnemyCharacter.cpp",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\EnemyCharacter.cpp",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\EnemyCharacter.cpp",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\EnemyCharacter.cpp",
-              "RelativeToolTip": "Source\\MonsterCatcher\\EnemyCharacter.cpp",
-              "ViewState": "AQIAAOYAAAAAAAAAAAAYwPcAAAAbAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-08T14:57:03.141Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "EnemyCharacter.h",
-              "DocumentMoniker": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\EnemyCharacter.h",
-              "RelativeDocumentMoniker": "Source\\MonsterCatcher\\EnemyCharacter.h",
-              "ToolTip": "C:\\Users\\729um\\UE_MC\\MonsterCatcher\\Source\\MonsterCatcher\\EnemyCharacter.h",
-              "RelativeToolTip": "Source\\MonsterCatcher\\EnemyCharacter.h",
-              "ViewState": "AQIAAB4AAAAAAAAAAAAAADQAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-08T14:56:46.456Z"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": -1,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+              "WhenOpened": "2025-12-09T05:26:48.796Z",
+              "EditorCaption": ""
             }
           ]
         }
