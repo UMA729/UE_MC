@@ -60,7 +60,12 @@ void AItemActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 
 	if (AMyCharacter* character = Cast<AMyCharacter>(OtherActor))
 	{
-		character->key_count++;
+		character->key_count++; // エフェクト
+		
+
+		// インベントリ追加とかここに…
+
+		Destroy();
 		Destroy();
 	}
 
