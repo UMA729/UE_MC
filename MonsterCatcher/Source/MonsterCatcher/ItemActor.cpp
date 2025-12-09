@@ -60,13 +60,7 @@ void AItemActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 
 	if (AMyCharacter* character = Cast<AMyCharacter>(OtherActor))
 	{
-		if (TargetWall)
-		{
-			if (AGimmickWall* Wall = Cast<AGimmickWall>(TargetWall))
-			{
-				Wall->StartMoveUp();
-			}
-		}
+		character->key_count++;
 		Destroy();
 	}
 

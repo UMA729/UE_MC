@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "MyCharacter.h"
 #include "GimmickWall.h"
 
 // Sets default values
@@ -10,6 +11,7 @@ AGimmickWall::AGimmickWall()
 	PrimaryActorTick.bCanEverTick = true;
 
 	WallMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WallMesh"));
+	WallMesh->OnComponentHit.AddDynamic(this, &AGimmickWall::OnHit);
 	WallMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	WallMesh->SetCollisionProfileName(TEXT("BlockAll"));
 
@@ -21,6 +23,27 @@ void AGimmickWall::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AGimmickWall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (!isHit)
+	{
+		if (AMyCharacter* character = Cast<AMyCharacter>(OtherActor))
+		{
+			if (character->key_count > 0)
+			{
+				isHit = true;
+				isMoving = true;
+				character->key_count--;
+
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("don't have key"));
+			}
+		}
+	}
 }
 
 // Called every frame

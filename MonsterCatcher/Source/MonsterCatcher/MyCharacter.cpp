@@ -2,6 +2,7 @@
 
 
 #include "MyCharacter.h"
+#include "GimmickActor.h"
 #include "UI_UserWidget.h"
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
@@ -64,7 +65,9 @@ AMyCharacter::AMyCharacter()
 	//isPers = true;
 	isRunning = false;
 	isGrappling = false;
+	
 	HP = 100;
+	key_count = 0;
 	Distance = 0.f;
 }
 
@@ -235,6 +238,10 @@ void AMyCharacter::Tick(float DeltaTime)
 				if (AGoalActor* LeverActor = Cast<AGoalActor>(HitActor))
 				{
 					LeverActor->OpenGoal();
+				}
+				else if (AGimmickActor* GimmickClass = Cast<AGimmickActor>(HitActor))
+				{
+					GimmickClass->Emerge();
 				}
 			}
 		}

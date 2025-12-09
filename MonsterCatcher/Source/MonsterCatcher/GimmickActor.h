@@ -4,41 +4,45 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "GimmickWall.generated.h"
+#include "GimmickActor.generated.h"
+
+class UStaticMeshComponent;
 
 UCLASS()
-class MONSTERCATCHER_API AGimmickWall : public AActor
+class MONSTERCATCHER_API AGimmickActor : public AActor
 {
 	GENERATED_BODY()
-
-
-public:
+	
+public:	
 	// Sets default values for this actor's properties
-	AGimmickWall();
+	AGimmickActor();
+
 
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* WallMesh;
+	UStaticMeshComponent* GimmickMesh;
+
+	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	bool MovingFloor; 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* ButtonActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* EnemyActor;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void StartMoveUp();
+	void Emerge();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		FVector NormalImpulse,
-		const FHitResult& Hit);
 
 private:
-	bool isMoving = false;
 	bool isHit = false;
 	float MoveSpeed = 200.f;
 	float MoveDistance = 300.f;
 	float MoveSoFar = 0.f;
+
 };

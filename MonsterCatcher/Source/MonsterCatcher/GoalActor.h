@@ -25,7 +25,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default")
 	TSoftObjectPtr<UWorld> LoadLevel;
-
+	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	bool isGimmickGoal;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* GoalText;
 

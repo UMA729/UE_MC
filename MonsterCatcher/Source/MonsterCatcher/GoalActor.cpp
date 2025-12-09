@@ -35,7 +35,10 @@ void AGoalActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GoalText->SetActorHiddenInGame(true);
+	if (isGimmickGoal)
+		GoalText->SetActorHiddenInGame(true);
+	else
+		isGoal = true;
 
 	StartLocation = GoalText->GetActorLocation();
 	StartRotate = GoalText->GetActorRotation();

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemActor.h"
 #include "GameFramework/Character.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -35,6 +36,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
 	UAnimMontage* AttackMontage;
 
+	//アイテムアクター
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
+	TSubclassOf<AItemActor> DropItemClass;
+
 	//敵：ハイエナ
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	bool isHyena;
@@ -44,6 +49,8 @@ public:
 	//敵：飛行キャラ（未定）
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	bool isFly_enemy;
+	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	bool gimmick_enemy;
 
 	//攻撃フラグ
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
@@ -110,6 +117,8 @@ public:
 	void ResetAttack();
 	//敵：ダッシュ;
 	void Run();
+	//敵：死亡
+	void Die();
 
 	float rotate_speed;
 

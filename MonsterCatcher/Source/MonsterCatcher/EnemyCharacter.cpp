@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EnemyCharacter.h"
@@ -33,9 +33,9 @@ AEnemyCharacter::AEnemyCharacter()
 
 	Sphere->SetGenerateOverlapEvents(true);
 
-	//ƒfƒoƒbƒO—p
-	//Sphere->SetHiddenInGame(false);             // ƒQ[ƒ€’†‚ÉŒ©‚¦‚é
-	//Sphere->bHiddenInGame = false;              // ”O‚Ì‚½‚ß
+	//ãƒ‡ãƒãƒƒã‚°ç”¨
+	//Sphere->SetHiddenInGame(false);             // ã‚²ãƒ¼ãƒ ä¸­ã«è¦‹ãˆã‚‹
+	//Sphere->bHiddenInGame = false;              // å¿µã®ãŸã‚
 	//Sphere->SetVisibility(true);
 
 
@@ -43,6 +43,7 @@ AEnemyCharacter::AEnemyCharacter()
 	//Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	isLooking = false;
 	bisFlying = false;
+	gimmick_enemy = false;
 	cooldown_time = 1.0f;
 
 	rotate_speed = 5.0f;
@@ -77,17 +78,17 @@ void AEnemyCharacter::BeginPlay()
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	if (HP < 0)
 	{
-		Destroy();
+		Die();
 	}
 
-	if (isArcheop )
+	if (isArcheop)
 	{
 		FHitResult Hit;
 		FVector Start = GetActorLocation();
-		FVector End = Start - FVector(0, 0, 200); // 200cm‰º‚ÉRay
+		FVector End = Start - FVector(0, 0, 200); // 200cmä¸‹ã«Ray
 
 		FHitResult GroundHit;
 		FCollisionQueryParams GroundParams;
@@ -97,16 +98,16 @@ void AEnemyCharacter::Tick(float DeltaTime)
 
 		bool bGround = GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, GrondObjParams, GroundParams);
 
-		if (!bGround && !isGround)
+		if (!bGround && !bisFlying)
 		{
 			bisFlying = true;
-			isGround = true;
+			isGround = false;
 			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 		}
-		else if(isGround)
+		else if (bGround && !isGround)
 		{
 			bisFlying = false;
-			isGround = false;
+			isGround = true;
 			GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 		}
 	}
@@ -117,32 +118,38 @@ void AEnemyCharacter::Tick(float DeltaTime)
 	}
 	else
 	{
-		if (!my_pawn) return;
+		if(!my_pawn) return;
 
-		FVector TargetActor = ori_pos - my_pawn->GetActorLocation();
+		FVector TargetVec = ori_pos - my_pawn->GetActorLocation();
+		float Dist = TargetVec.Size();
+		UE_LOG(LogTemp, Warning, TEXT("%f"), Dist);
 
-		FRotator LookatTarget = TargetActor.Rotation();
-		FRotator CurrentMyRot = my_pawn->GetActorRotation();
-
-		FRotator NewRotate = FMath::RInterpTo(
-			CurrentMyRot,
-			LookatTarget,
-			DeltaTime,
-			rotate_speed
-		);
-
-		my_pawn->SetActorRotation(NewRotate);
-
-		if (TargetActor.Y < 0)
+		//å…ˆã«åˆ°ç€ãƒã‚§ãƒƒã‚¯
+		if (Dist < 20.0f)
 		{
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-			const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-			AddMovementInput(ForwardDirection, move_speed);
-
+			// å®Œå…¨å¾…æ©ŸçŠ¶æ…‹ã«ã™ã‚‹
+			isLooking = false;
+			return;
 		}
+
+		FRotator TargetRot = TargetVec.Rotation();
+		FRotator CurrentRot = my_pawn->GetActorRotation();
+
+		// å›è»¢
+		FRotator NewRot = FMath::RInterpTo(CurrentRot, TargetRot, DeltaTime, rotate_speed);
+		my_pawn->SetActorRotation(NewRot);
+
+		// å‘ãåˆ¤å®šï¼ˆDotç©ï¼‰
+		FVector Dir = TargetVec.GetSafeNormal();
+		FVector Forward = my_pawn->GetActorForwardVector();
+		float Dot = FVector::DotProduct(Forward, Dir);
+
+		if (Dot > 0.9f) //ã»ã¼æ­£é¢
+		{
+			AddMovementInput(Forward, move_speed);
+		}
+		
+
 	}
 }
 
@@ -160,17 +167,17 @@ void AEnemyCharacter::Move(float Deltatime)
 
 	if (distance > stop_distance)
 	{
-		//ƒnƒCƒGƒi‹““®
+		//ãƒã‚¤ã‚¨ãƒŠæŒ™å‹•
 		if (isHyena)
 		{
 			Hyena(Deltatime);
 		}
-		//n‘c’¹‹““®
+		//å§‹ç¥–é³¥æŒ™å‹•
 		else if (isArcheop)
 		{
 			Archeop();
 		}
-		//”òsƒGƒlƒ~[‹““®
+		//é£›è¡Œã‚¨ãƒãƒŸãƒ¼æŒ™å‹•
 		else if (isFly_enemy)
 		{
 			FlyEnemy();
@@ -181,9 +188,9 @@ void AEnemyCharacter::Move(float Deltatime)
 		Attack();
 	}
 
-	//ƒvƒŒƒCƒ„[‚Æ‚Ì‹——£‚ğ‚Æ‚é
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ã®è·é›¢ã‚’ã¨ã‚‹
 	FVector TargetActor = player_actor->GetActorLocation() - my_pawn->GetActorLocation();
-	//c‚Ì’ÇÕ‚Í‚È‚µ
+	//ç¸¦ã®è¿½è·¡ã¯ãªã—
 	TargetActor.Z = 0;
 
 	FRotator LookatTarget = TargetActor.Rotation();
@@ -196,7 +203,7 @@ void AEnemyCharacter::Move(float Deltatime)
 		rotate_speed
 	);
 
-	//ƒvƒŒƒCƒ„[‚ğŒ©‚é
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’è¦‹ã‚‹
 	my_pawn->SetActorRotation(NewRotate);
 }
 
@@ -238,6 +245,27 @@ void AEnemyCharacter::Run()
 
 }
 
+void AEnemyCharacter::Die()
+{
+	if (DropItemClass && gimmick_enemy)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Drop"));
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		GetWorld()->SpawnActor<AItemActor>(
+			DropItemClass,
+			GetActorLocation(),
+			FRotator::ZeroRotator,
+			SpawnParams
+		);
+	}
+
+	Destroy();
+}
+
 void AEnemyCharacter::Attack()
 {
 	if (!isFly_enemy && !bisAttacking)
@@ -245,7 +273,7 @@ void AEnemyCharacter::Attack()
 		bisAttacking = true;
 		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 		{
-			// ƒN[ƒ‹ƒ^ƒCƒ€ŠJn
+			// ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ é–‹å§‹
 			Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -258,7 +286,7 @@ void AEnemyCharacter::Attack()
 	}
 	else if (isFly_enemy && !bisAttacking)
 	{
-		//‹ó’†‚Ì“G‚ÌUŒ‚
+		//ç©ºä¸­ã®æ•µã®æ”»æ’ƒ
 		;
 	}
 }
