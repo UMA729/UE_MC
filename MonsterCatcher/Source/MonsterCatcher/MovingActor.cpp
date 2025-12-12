@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "TimerManager.h" // ★絶対必要
 #include "MovingActor.h"
 
 // Sets default values
@@ -44,6 +45,9 @@ void AMovingActor::Tick(float DeltaTime)
 		{
 			CurrentLocation = TargetLocation;
 			bGoingForward = false;
+
+			// ★停止開始
+			StartWait();
 		}
 	}
 	else
@@ -55,10 +59,29 @@ void AMovingActor::Tick(float DeltaTime)
 		{
 			CurrentLocation = StartLocation;
 			bGoingForward = true;
+
+			// ★停止開始
+			StartWait();
 		}
+
+		SetActorLocation(CurrentLocation);
 	}
-
-	SetActorLocation(CurrentLocation);
-
 }
 
+void AMovingActor::StartWait()
+{
+	bIsWaiting = true;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		WaitTimerHandle,
+		this,
+		&AMovingActor::ResumeMove,
+		WaitTime,
+		false
+	);
+}
+
+void AMovingActor::ResumeMove()
+{
+	bIsWaiting = false;
+}

@@ -30,8 +30,17 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Platform")
 	float MoveSpeed = 100.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float WaitTime = 2.0f; // 2ïbí‚é~Ç»Ç«
+
+
 private:
 	FVector StartLocation;
 	bool bGoingForward = true;
 
+	FTimerHandle WaitTimerHandle;
+	bool bIsWaiting = false;
+
+	void StartWait();
+	void ResumeMove();
 };
