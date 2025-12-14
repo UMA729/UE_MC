@@ -27,6 +27,10 @@ public:
 	TSoftObjectPtr<UWorld> LoadLevel;
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	bool isGimmickGoal;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor*> GimmickActor;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* GoalText;
 
@@ -41,6 +45,9 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	UPROPERTY(VisibleAnywhere, Category = KillVolume, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USceneComponent> DefaultSceneRoot;
+
 	UFUNCTION()
 	void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	/** 接触判定用のCollision : Sphere */
@@ -62,4 +69,6 @@ private:
 	// 回転パラメータ
 	UPROPERTY(EditAnywhere, Category = "Floating")
 	float RotationSpeed = 45.0f;   // 1秒あたりの回転角度（度）
+
+	TArray<FVector> ActorIndex;
 };

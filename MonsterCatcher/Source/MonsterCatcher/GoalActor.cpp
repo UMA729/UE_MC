@@ -14,10 +14,13 @@ AGoalActor::AGoalActor()
 	
 	GoalText = CreateDefaultSubobject<AActor>(TEXT("GoalText"));
 
+	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	RootComponent = DefaultSceneRoot;
+
 	// SphereCollisionÇí«â¡Ç∑ÇÈ
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 
-	RootComponent = Sphere;
+	Sphere->SetupAttachment(RootComponent);
 	// RadiusÇê›íËÇ∑ÇÈ
 	Sphere->SetSphereRadius(72.0f);
 
@@ -26,7 +29,6 @@ AGoalActor::AGoalActor()
 
 	// StaticMeshComponentÇí«â¡ÇµÅARootComponentÇ…ê›íËÇ∑ÇÈ
 	Goal = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-
 	Goal->SetupAttachment(RootComponent);
 
 }
@@ -39,6 +41,19 @@ void AGoalActor::BeginPlay()
 		GoalText->SetActorHiddenInGame(true);
 	else
 		isGoal = true;
+
+	ActorIndex.Empty();
+	ActorIndex.Reserve(GimmickActor.Num());
+	for (AActor * Gimmick:GimmickActor)
+	{
+		if (!Gimmick) continue;
+
+		ActorIndex.Add(Gimmick->GetActorLocation());
+
+		Gimmick->SetActorHiddenInGame(true);
+		Gimmick->SetActorEnableCollision(false);
+		Gimmick->SetActorTickEnabled(false);
+	}
 
 	StartLocation = GoalText->GetActorLocation();
 	StartRotate = GoalText->GetActorRotation();
@@ -66,6 +81,19 @@ void AGoalActor::OpenGoal()
 	UE_LOG(LogTemp, Warning, TEXT("ÇÕÇ¢ÇËÇ‹ÇµÇΩ"));
 	isGoal = true;
 	GoalText->SetActorHiddenInGame(false);
+
+	for (int32 i = 0; i < GimmickActor.Num(); ++i)
+	{
+
+		AActor* Gimmick = GimmickActor[i];
+
+		if (!Gimmick) continue;
+
+		Gimmick->SetActorLocation(ActorIndex[i]);
+		Gimmick->SetActorHiddenInGame(false);
+		Gimmick->SetActorEnableCollision(true);
+		Gimmick->SetActorTickEnabled(true);
+	}
 }
 
 void AGoalActor::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

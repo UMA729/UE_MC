@@ -20,12 +20,12 @@ void AGimmickActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    if (ButtonActor)
+    if (Gimmick)
     {
-        ButtonStartLocation = ButtonActor->GetActorLocation();
-        ButtonActor->SetActorHiddenInGame(true);
-        ButtonActor->SetActorEnableCollision(false);
-        ButtonActor->SetActorTickEnabled(false);
+        ButtonStartLocation = Gimmick->GetActorLocation();
+        Gimmick->SetActorHiddenInGame(true);
+        Gimmick->SetActorEnableCollision(false);
+        Gimmick->SetActorTickEnabled(false);
     }
 
     EnemyStartLocations.Empty();
@@ -46,11 +46,11 @@ void AGimmickActor::BeginPlay()
 
 void AGimmickActor::Emerge()
 {
-	if (ButtonActor)
+	if (Gimmick)
 	{
-		ButtonActor->SetActorHiddenInGame(false);
-		ButtonActor->SetActorEnableCollision(true);
-		ButtonActor->SetActorTickEnabled(true);
+		Gimmick->SetActorHiddenInGame(false);
+		Gimmick->SetActorEnableCollision(true);
+		Gimmick->SetActorTickEnabled(true);
 	}
 
     for (int32 i = 0; i < EnemyActors.Num(); ++i)

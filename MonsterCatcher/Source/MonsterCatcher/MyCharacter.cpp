@@ -360,7 +360,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	//{
 	//	FVector ActorLoc = GetActorLocation();
 	//	FVector ToAnchor = GrabPoint - ActorLoc;
-	//	float DistanceToAnchor = ToAnchor.Size();
+	//	float dDistanceToAnchor = ToAnchor.Size();
 	//	FVector RopeDir = ToAnchor.GetSafeNormal();
 
 	//	// ロープの長さを常に現在の距離に追従させる

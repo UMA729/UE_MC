@@ -310,7 +310,22 @@ void AEnemyCharacter::ResetAttack()
 void AEnemyCharacter::OnHitOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (AMyCharacter* CharacterClass = Cast<AMyCharacter>(OtherActor))
-	{
+	{ 
+		// ノックバック方向（攻撃者 → 被ダメージ側）
+		FVector KnockbackDir =
+			(CharacterClass->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+
+		// Zを少し上にすると吹き飛ぶ感じになる
+		FVector KnockbackVelocity = KnockbackDir * KnockbackPower;
+		KnockbackVelocity.Z = 300.0f;
+
+		// ★ ノックバック発動
+		CharacterClass->LaunchCharacter(
+			KnockbackVelocity,
+			true,   // XYを上書き
+			true    // Zを上書き
+		);
+
 		if (CharacterClass->HP > attack_damage)
 		{
 			CharacterClass->Damage(attack_damage);

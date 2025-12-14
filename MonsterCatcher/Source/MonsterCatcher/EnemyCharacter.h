@@ -61,6 +61,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	float HP;
+
+	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	float KnockbackPower = 600.0f;
 	// Sets default values for this character's properties
 
 protected:

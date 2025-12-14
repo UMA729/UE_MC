@@ -25,7 +25,7 @@ public:
 	bool MovingFloor; 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* ButtonActor;
+	AActor* Gimmick;
 	UPROPERTY(EditAnywhere, Category = "Gimmick")
 	TArray<AActor*> EnemyActors;
 

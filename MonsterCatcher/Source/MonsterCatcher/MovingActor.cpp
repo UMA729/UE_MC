@@ -32,16 +32,23 @@ void AMovingActor::BeginPlay()
 void AMovingActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
+	// ’âŽ~’†‚È‚ç“®‚©‚³‚È‚¢
+	if (bIsWaiting) return;
+
+
 	FVector CurrentLocation = GetActorLocation();
-	FVector TargetLocation = StartLocation + MoveOffset;
+	FVector WorldMoveOffset = GetActorTransform().TransformVector(MoveOffset);
+	FVector TargetLocation = StartLocation + WorldMoveOffset;
 
 	// ˆÚ“®•ûŒü”»’è
 	if (bGoingForward)
 	{
-		FVector MoveDir = (MoveOffset).GetSafeNormal();
+		FVector MoveDir = WorldMoveOffset.GetSafeNormal();
 		CurrentLocation += MoveDir * MoveSpeed * DeltaTime;
 
-		if (FVector::Dist(CurrentLocation, StartLocation) >= MoveOffset.Size())
+		if (FVector::Dist(CurrentLocation, StartLocation) >= WorldMoveOffset.Size())
 		{
 			CurrentLocation = TargetLocation;
 			bGoingForward = false;
@@ -52,10 +59,10 @@ void AMovingActor::Tick(float DeltaTime)
 	}
 	else
 	{
-		FVector MoveDir = (-MoveOffset).GetSafeNormal();
+		FVector MoveDir = (- WorldMoveOffset).GetSafeNormal();
 		CurrentLocation += MoveDir * MoveSpeed * DeltaTime;
 
-		if (FVector::Dist(CurrentLocation, TargetLocation) >= MoveOffset.Size())
+		if (FVector::Dist(CurrentLocation, TargetLocation) >= WorldMoveOffset.Size())
 		{
 			CurrentLocation = StartLocation;
 			bGoingForward = true;
@@ -64,8 +71,8 @@ void AMovingActor::Tick(float DeltaTime)
 			StartWait();
 		}
 
-		SetActorLocation(CurrentLocation);
 	}
+		SetActorLocation(CurrentLocation);
 }
 
 void AMovingActor::StartWait()
