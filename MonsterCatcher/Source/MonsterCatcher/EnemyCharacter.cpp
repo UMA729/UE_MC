@@ -32,7 +32,7 @@ AEnemyCharacter::AEnemyCharacter()
 	Sphere->SetupAttachment(GetMesh());
 
 	Sphere->SetGenerateOverlapEvents(true);
-
+	SetActorTickEnabled(false);
 	//デバッグ用
 	//Sphere->SetHiddenInGame(false);             // ゲーム中に見える
 	//Sphere->bHiddenInGame = false;              // 念のため
@@ -43,6 +43,7 @@ AEnemyCharacter::AEnemyCharacter()
 	//Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	isLooking = false;
 	bisFlying = false;
+
 	gimmick_enemy = false;
 	cooldown_time = 1.0f;
 
@@ -78,7 +79,39 @@ void AEnemyCharacter::BeginPlay()
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
+	if (isArcheop)
+	{
+		FHitResult Hit;
+		FVector Start = GetActorLocation();
+		FVector End = Start - FVector(0, 0, 200); // 200cm下にRay
+
+		FHitResult GroundHit;
+		FCollisionQueryParams GroundParams;
+		GroundParams.AddIgnoredActor(this);
+		FCollisionObjectQueryParams  GrondObjParams;
+		GrondObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel3);
+
+		bool bGround = GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, GrondObjParams, GroundParams);
+
+		if (!bGround && !bisFlying)
+		{
+			bisFlying = true;
+			isGround = false;
+			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+		}
+		else if (bGround && !isGround)
+		{
+			bisFlying = false;
+			isGround = true;
+			GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+		}
+	}
+
+	if (!bisSpawn)
+	{
+		return;
+	}
 	if (HP < 0)
 	{
 		Die();

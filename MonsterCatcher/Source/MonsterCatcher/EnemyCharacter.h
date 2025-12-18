@@ -58,6 +58,8 @@ public:
 	//îÚçsÉtÉâÉO
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	bool bisFlying;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
+	bool bisSpawn = true;
 
 	UPROPERTY(EditAnywhere, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	float HP;

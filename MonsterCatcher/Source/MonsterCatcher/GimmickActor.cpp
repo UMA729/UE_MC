@@ -2,6 +2,8 @@
 
 
 #include "GimmickActor.h"
+#include "EnemyCharacter.h"
+#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -34,11 +36,15 @@ void AGimmickActor::BeginPlay()
     {
         if (!Enemy) continue;
 
-        EnemyStartLocations.Add(Enemy->GetActorLocation());
+        if (AEnemyCharacter* enemy_class = Cast<AEnemyCharacter>(Enemy))
+        {
+            enemy_class->bisSpawn = false;
+            enemy_class->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        }
 
+        EnemyStartLocations.Add(Enemy->GetActorLocation());
+        
         Enemy->SetActorHiddenInGame(true);
-        Enemy->SetActorEnableCollision(false);
-        Enemy->SetActorTickEnabled(false);
     }
 }
 
@@ -59,9 +65,15 @@ void AGimmickActor::Emerge()
         if (!Enemy) continue;
 
         Enemy->SetActorLocation(EnemyStartLocations[i]);
+
+        if (AEnemyCharacter* enemy_class = Cast<AEnemyCharacter>(Enemy))
+        {
+            enemy_class->bisSpawn = true;
+            enemy_class->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        }
+
         Enemy->SetActorHiddenInGame(false);
-        Enemy->SetActorEnableCollision(true);
-        Enemy->SetActorTickEnabled(true);
+
     }
 
 }
