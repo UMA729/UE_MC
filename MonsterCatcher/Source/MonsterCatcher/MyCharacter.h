@@ -29,7 +29,7 @@ public:
 	TSubclassOf<AThrowKnifeActor>KnifeClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
-	UAnimMontage* AttackMontage;
+	UAnimMontage* FireMontage;
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))

@@ -146,78 +146,172 @@ void AMyCharacter::Tick(float DeltaTime)
 
 
 	// ケーブル飛翔中（伸ばし中）
-	if (bIsFiringGrapple)
-	{
-		// 先端を伸ばす
-		float FireSpeed = 4000.f;
-		CurrentCableLength += FireSpeed * DeltaTime;
-
-		//FVector AdjustedDir = GrappleDir;
-		//AdjustedDir = FVector(0.f,0.f,0.f); // X成分をゼロにして無視
-		//AdjustedDir.Normalize(); // 正規化し直す（重要）
-
-		//ここでXが+されてしまうのが原因 == ×
-		//GrappleTip = GrappleStart + GrappleDir * CurrentCableLength;
-
-		//UE_LOG(LogTemp, Warning, TEXT("%f,%f,%f"), GrappleTip.X, GrappleTip.Y, GrappleTip.Z);
-		// レイを都度飛ばす（先端まで）
-		//グラップル天井用レイ
-		bool gHit;
-		FHitResult GraHit;
-		FCollisionQueryParams GrappleParams;
-		GrappleParams.AddIgnoredActor(this);
-		FCollisionObjectQueryParams  GraObjParams;
-		GraObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel1);
-		//ギミック用レイ
-		bool bHit;
-		FHitResult GimHit;
-		FCollisionQueryParams GimmickParams;
-		GimmickParams.AddIgnoredActor(this);
-		FCollisionObjectQueryParams  GimObjParams;
-		GimObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel2);
-
-		
-
-
-		GrappleTip = GrappleStart + GrappleDir * CurrentCableLength;
-
-		gHit = GetWorld()->LineTraceSingleByObjectType(
-			GraHit,
-			GrappleStart,
-			GrappleTip,
-			GraObjParams,
-			GrappleParams
-		);
-
-		bHit = GetWorld()->LineTraceSingleByObjectType(
-			GimHit,
-			GrappleStart,
-			GrappleTip,
-			GimObjParams,
-			GimmickParams
-		);
-		
-		//--------------追加--------------------------
-		// 伸ばす予定の先端位置
-		if (!bHit && !gHit)
+		if (bIsFiringGrapple)
 		{
+			// 先端を伸ばす
+			float FireSpeed = 4000.f;
+			CurrentCableLength += FireSpeed * DeltaTime;
 
-			FVector DesiredTip = GrappleStart + GrappleDir * CurrentCableLength;
+			//FVector AdjustedDir = GrappleDir;
+			//AdjustedDir = FVector(0.f,0.f,0.f); // X成分をゼロにして無視
+			//AdjustedDir.Normalize(); // 正規化し直す（重要）
 
-			// 先にブロッカー判定（壁など）
-			FHitResult BlockHit;
-			bool bBlocked = GetWorld()->LineTraceSingleByChannel(
-				BlockHit,
+			//ここでXが+されてしまうのが原因 == ×
+			//GrappleTip = GrappleStart + GrappleDir * CurrentCableLength;
+
+			//UE_LOG(LogTemp, Warning, TEXT("%f,%f,%f"), GrappleTip.X, GrappleTip.Y, GrappleTip.Z);
+			// レイを都度飛ばす（先端まで）
+			//グラップル天井用レイ
+			bool gHit;
+			FHitResult GraHit;
+			FCollisionQueryParams GrappleParams;
+			GrappleParams.AddIgnoredActor(this);
+			FCollisionObjectQueryParams  GraObjParams;
+			GraObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel1);
+			//ギミック用レイ
+			bool bHit;
+			FHitResult GimHit;
+			FCollisionQueryParams GimmickParams;
+			GimmickParams.AddIgnoredActor(this);
+			FCollisionObjectQueryParams  GimObjParams;
+			GimObjParams.AddObjectTypesToQuery(ECC_GameTraceChannel2);
+
+
+
+
+			GrappleTip = GrappleStart + GrappleDir * CurrentCableLength;
+
+			gHit = GetWorld()->LineTraceSingleByObjectType(
+				GraHit,
 				GrappleStart,
-				DesiredTip,
-				ECC_Visibility // 壁・床が Block の TraceChannel
+				GrappleTip,
+				GraObjParams,
+				GrappleParams
 			);
 
-			// ブロックされていたら、そこで止める
-			if (bBlocked)
+			bHit = GetWorld()->LineTraceSingleByObjectType(
+				GimHit,
+				GrappleStart,
+				GrappleTip,
+				GimObjParams,
+				GimmickParams
+			);
+
+			//--------------追加--------------------------
+			// 伸ばす予定の先端位置
+			if (!bHit && !gHit)
 			{
-				GrappleTip = BlockHit.Location; // 壁まで
-				//グラップル停止
+
+				FVector DesiredTip = GrappleStart + GrappleDir * CurrentCableLength;
+
+				// 先にブロッカー判定（壁など）
+				FHitResult BlockHit;
+				bool bBlocked = GetWorld()->LineTraceSingleByChannel(
+					BlockHit,
+					GrappleStart,
+					DesiredTip,
+					ECC_Visibility // 壁・床が Block の TraceChannel
+				);
+
+				// ブロックされていたら、そこで止める
+				if (bBlocked)
+				{
+					GrappleTip = BlockHit.Location; // 壁まで
+					//グラップル停止
+					bIsFiringGrapple = false;
+					GrappleCable->SetVisibility(false);
+					if (GrappleAnchor)
+					{
+						GrappleAnchor->DestroyComponent();
+						GrappleAnchor = nullptr;
+					}
+
+					gHit = false;            // 天井にヒットしていない扱いに
+					bHit = false;            // 天井にヒットしていない扱いに
+					return;                         // ★ここで処理終了が重要！
+				}
+			}
+			//---------------------------------------------
+
+			if (bHit)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("HitActor: %s"), *GimHit.GetActor()->GetName());
+			}
+
+			// 視覚確認用ライン
+			//DrawDebugLine(GetWorld(), GrappleStart, GrappleTip, FColor::Green, false, -1.0f, 0, 2.0f);
+
+			// ケーブルの先端位置更新
+			if (!gHit)
+				GrappleCable->SetWorldLocation(GrappleStart);
+
+
+			if (!bHasHitTarget)
+			{
+
+				if (GrappleCable)
+				{
+					// CableComponent自体の位置は「開始点(ソケット)」のままにしておき、終端アタッチ先（Anchor）を動かす方が一般的
+					// Anchor が無ければ作成して FirstPersonCamera に相対アタッチしておく
+					if (!GrappleAnchor)
+					{
+						GrappleAnchor = NewObject<USceneComponent>(this, TEXT("GrappleAnchor"));
+						if (GrappleAnchor)
+						{
+							GrappleAnchor->RegisterComponent();
+							GrappleAnchor->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
+						}
+					}
+
+					if (GrappleAnchor)
+					{
+						// Anchor を先端位置に移動させ、ケーブルの終点を Anchor にアタッチ
+						GrappleAnchor->SetWorldLocation(GrappleTip);
+						GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
+					}
+				}
+
+			}
+
+			// 命中した瞬間
+			if (bHit && !bHasHitTarget)
+			{
+				if (AActor* HitActor = GimHit.GetActor())
+				{
+					if (AGoalActor* LeverActor = Cast<AGoalActor>(HitActor))
+					{
+						LeverActor->OpenGoal();
+					}
+					else if (AGimmickActor* GimmickClass = Cast<AGimmickActor>(HitActor))
+					{
+						GimmickClass->Emerge();
+					}
+				}
+			}
+			if (gHit && !bHasHitTarget)
+			{
+
+				GrappleCable->SetWorldLocation(CableStart);
+
+				GrappleAnchor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+
+				bHasHitTarget = true;
+				GrabPoint = GraHit.ImpactPoint;
+				GrappleAnchor->SetWorldLocation(GrabPoint);
+
+				TargetCableLength = FVector::Distance(GrappleStart, GrabPoint);
+				CurrentCableLength = TargetCableLength; // ピッタリの長さで固定
+
+				bIsFiringGrapple = false;
+				CableStart = GetMesh()->GetSocketLocation(TEXT("RightHand"));
+				isGrappling = true;
+
+				//UE_LOG(LogTemp, Warning, TEXT("Grapple Hit: %s"), *GrabPoint.ToString());
+			}
+
+			// 一定距離まで伸ばしたのに当たらなかったらリセット
+			if (CurrentCableLength > 3000.f && !bHasHitTarget)
+			{
 				bIsFiringGrapple = false;
 				GrappleCable->SetVisibility(false);
 				if (GrappleAnchor)
@@ -225,135 +319,46 @@ void AMyCharacter::Tick(float DeltaTime)
 					GrappleAnchor->DestroyComponent();
 					GrappleAnchor = nullptr;
 				}
-
-				gHit = false;            // 天井にヒットしていない扱いに
-				bHit = false;            // 天井にヒットしていない扱いに
-				return;                         // ★ここで処理終了が重要！
 			}
 		}
-		//---------------------------------------------
 
-		if (bHit)
+
+		// 振り子物理処理
+		if (isGrappling)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("HitActor: %s"), *GimHit.GetActor()->GetName());
+			CableStart = GetMesh()->GetSocketLocation(TEXT("RightHand"));
+
+
+			const float MinCableLength = 300.f;
+
+			// ←今までは Max で強制的に縮めていたが、
+			//    ここを滑らかな補間に変える
+			float InterpSpeed = 200.f; // ← 速くしたいなら20〜30にしてOK
+
+			CurrentCableLength = FMath::FInterpTo(
+				CurrentCableLength,   // 現在の長さ
+				MinCableLength,       // 目標の長さ（第二引数）
+				DeltaTime,
+				InterpSpeed
+			);
+
+			FVector ActorLoc = GetActorLocation();
+			FVector ToAnchor = GrabPoint - ActorLoc;
+			float DistanceToAnchor = ToAnchor.Size();
+			FVector RopeDir = ToAnchor.GetSafeNormal();
+
+			FVector CorrectedPos = GrabPoint - RopeDir * CurrentCableLength;
+			FVector Correction = CorrectedPos - ActorLoc;
+
+			GetCharacterMovement()->AddForce(Correction * 900.f);
+			GetCharacterMovement()->AddForce(FVector(0, 0, -980.f * GetCharacterMovement()->Mass));
+
+			FVector Velocity = GetCharacterMovement()->Velocity;
+			float SpeedAlongRope = FVector::DotProduct(Velocity, RopeDir);
+			FVector TangentialVelocity = Velocity - RopeDir * SpeedAlongRope;
+			GetCharacterMovement()->Velocity = TangentialVelocity;
 		}
 
-		// 視覚確認用ライン
-		//DrawDebugLine(GetWorld(), GrappleStart, GrappleTip, FColor::Green, false, -1.0f, 0, 2.0f);
-
-		// ケーブルの先端位置更新
-		if (!gHit)
-			GrappleCable->SetWorldLocation(GrappleStart);
-
-
-		if (!bHasHitTarget)
-		{
-
-			if (GrappleCable)
-			{
-				// CableComponent自体の位置は「開始点(ソケット)」のままにしておき、終端アタッチ先（Anchor）を動かす方が一般的
-				// Anchor が無ければ作成して FirstPersonCamera に相対アタッチしておく
-				if (!GrappleAnchor)
-				{
-					GrappleAnchor = NewObject<USceneComponent>(this, TEXT("GrappleAnchor"));
-					if (GrappleAnchor)
-					{
-						GrappleAnchor->RegisterComponent();
-						GrappleAnchor->AttachToComponent(FirstPersonCamera, FAttachmentTransformRules::KeepRelativeTransform);
-					}
-				}
-
-				if (GrappleAnchor)
-				{
-					// Anchor を先端位置に移動させ、ケーブルの終点を Anchor にアタッチ
-					GrappleAnchor->SetWorldLocation(GrappleTip);
-					GrappleCable->SetAttachEndToComponent(GrappleAnchor, NAME_None);
-				}
-			}
-
-		}
-
-		// 命中した瞬間
-		if (bHit && !bHasHitTarget)
-		{
-			if (AActor* HitActor = GimHit.GetActor())
-			{
-				if (AGoalActor* LeverActor = Cast<AGoalActor>(HitActor))
-				{
-					LeverActor->OpenGoal();
-				}
-				else if (AGimmickActor* GimmickClass = Cast<AGimmickActor>(HitActor))
-				{
-					GimmickClass->Emerge();
-				}
-			}
-		}
-		if (gHit && !bHasHitTarget)
-		{
-
-			GrappleCable->SetWorldLocation(CableStart);
-
-			GrappleAnchor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-
-			bHasHitTarget = true;
-			GrabPoint = GraHit.ImpactPoint;
-			GrappleAnchor->SetWorldLocation(GrabPoint);
-
-			TargetCableLength = FVector::Distance(GrappleStart, GrabPoint);
-			CurrentCableLength = TargetCableLength; // ピッタリの長さで固定
-
-			bIsFiringGrapple = false;
-			isGrappling = true;
-
-			//UE_LOG(LogTemp, Warning, TEXT("Grapple Hit: %s"), *GrabPoint.ToString());
-		}
-
-		// 一定距離まで伸ばしたのに当たらなかったらリセット
-		if (CurrentCableLength > 3000.f && !bHasHitTarget)
-		{
-			bIsFiringGrapple = false;
-			GrappleCable->SetVisibility(false);
-			if (GrappleAnchor)
-			{
-				GrappleAnchor->DestroyComponent();
-				GrappleAnchor = nullptr;
-			}
-		}
-	}
-
-
-	// 振り子物理処理
-	if (isGrappling)
-	{
-		const float MinCableLength = 300.f;
-
-		// ←今までは Max で強制的に縮めていたが、
-		//    ここを滑らかな補間に変える
-		float InterpSpeed = 200.f; // ← 速くしたいなら20〜30にしてOK
-
-		CurrentCableLength = FMath::FInterpTo(
-			CurrentCableLength,   // 現在の長さ
-			MinCableLength,       // 目標の長さ（第二引数）
-			DeltaTime,
-			InterpSpeed
-		);
-
-		FVector ActorLoc = GetActorLocation();
-		FVector ToAnchor = GrabPoint - ActorLoc;
-		float DistanceToAnchor = ToAnchor.Size();
-		FVector RopeDir = ToAnchor.GetSafeNormal();
-
-		FVector CorrectedPos = GrabPoint - RopeDir * CurrentCableLength;
-		FVector Correction = CorrectedPos - ActorLoc;
-
-		GetCharacterMovement()->AddForce(Correction * 900.f);
-		GetCharacterMovement()->AddForce(FVector(0, 0, -980.f * GetCharacterMovement()->Mass));
-
-		FVector Velocity = GetCharacterMovement()->Velocity;
-		float SpeedAlongRope = FVector::DotProduct(Velocity, RopeDir);
-		FVector TangentialVelocity = Velocity - RopeDir * SpeedAlongRope;
-		GetCharacterMovement()->Velocity = TangentialVelocity;
-	}
 
 	// 振り子物理処理 実験
 	//if (isGrappling)
@@ -480,12 +485,6 @@ void AMyCharacter::StopRun(const FInputActionValue& Value)
 //グラップル
 void AMyCharacter::Grappling(const FInputActionValue& Value)
 {
-
-	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
-	{
-		if(AnimInstance->Montage_IsPlaying(AttackMontage))
-			AnimInstance->Montage_Stop(0.f, AttackMontage); // blend out 0.25秒
-	}
 	if (bIsFiringGrapple) return;
 
 	if (!isGrappling)
@@ -541,15 +540,7 @@ void AMyCharacter::StopGrapple(const FInputActionValue& Value)
 
 void AMyCharacter::Fire(const FInputActionValue& Value)
 {
-	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
-	{
-		if (!AnimInstance->Montage_IsPlaying(AttackMontage) && !isGrappling)
-		{
-			FOnMontageEnded EndDelegate;
-			AnimInstance->Montage_Play(AttackMontage);
-			AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
-		}
-	}
+	
 
 	if (KnifeClass != nullptr)
 	{
