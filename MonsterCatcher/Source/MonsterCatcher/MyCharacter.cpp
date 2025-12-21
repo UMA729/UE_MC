@@ -303,7 +303,6 @@ void AMyCharacter::Tick(float DeltaTime)
 				CurrentCableLength = TargetCableLength; // ピッタリの長さで固定
 
 				bIsFiringGrapple = false;
-				CableStart = GetMesh()->GetSocketLocation(TEXT("RightHand"));
 				isGrappling = true;
 
 				//UE_LOG(LogTemp, Warning, TEXT("Grapple Hit: %s"), *GrabPoint.ToString());
@@ -327,13 +326,13 @@ void AMyCharacter::Tick(float DeltaTime)
 		if (isGrappling)
 		{
 			CableStart = GetMesh()->GetSocketLocation(TEXT("RightHand"));
-
+			GrappleCable->SetWorldLocation(CableStart);
 
 			const float MinCableLength = 300.f;
 
 			// ←今までは Max で強制的に縮めていたが、
 			//    ここを滑らかな補間に変える
-			float InterpSpeed = 200.f; // ← 速くしたいなら20〜30にしてOK
+			float InterpSpeed = 500.f; // ← 速くしたいなら20〜30にしてOK
 
 			CurrentCableLength = FMath::FInterpTo(
 				CurrentCableLength,   // 現在の長さ

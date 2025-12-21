@@ -4,6 +4,9 @@
 #include "ItemActor.h"
 #include "GimmickWall.h"
 #include "MyCharacter.h"
+#include "MyGameInstance.h"
+#include "GameFramework/PlayerStart.h"
+#include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -61,11 +64,12 @@ void AItemActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 	if (AMyCharacter* character = Cast<AMyCharacter>(OtherActor))
 	{
 		character->key_count++; // エフェクト
-		
+		UMyGameInstance* GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+		GameInstance->keycount++;
 
 		// インベントリ追加とかここに…
 
-		Destroy();
 		Destroy();
 	}
 

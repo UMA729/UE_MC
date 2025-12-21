@@ -102,7 +102,7 @@ public:
 
 	float HP;
 
-	int key_count;
+	int32 key_count;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UUserWidget> UIWidgetClass;
