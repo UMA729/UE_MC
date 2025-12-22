@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/ProgressBar.h"
 #include "Components/TEXTBlock.h"
+#include "Components/Image.h"
 #include "UI_UserWidget.generated.h"
 
 /**
@@ -19,10 +20,16 @@ class MONSTERCATCHER_API UUI_UserWidget : public UUserWidget
 public:
     UPROPERTY(meta = (BindWidget))
     UProgressBar* HPBar;
+    
+    UPROPERTY(meta = (BindWidget))
+    UProgressBar* KeyBackImg;
 
     UPROPERTY(meta = (BindWidget))
     UTextBlock* KeyCount;
-    
+
+    UPROPERTY(meta = (BindWidget))
+    UImage* KeyImg;
+
     UFUNCTION(BlueprintCallable)
     void SetHPPercent(float percent);
 

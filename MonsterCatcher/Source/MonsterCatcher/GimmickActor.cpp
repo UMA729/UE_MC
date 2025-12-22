@@ -5,6 +5,7 @@
 #include "EnemyCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 // Sets default values
 AGimmickActor::AGimmickActor()
@@ -45,6 +46,20 @@ void AGimmickActor::BeginPlay()
         EnemyStartLocations.Add(Enemy->GetActorLocation());
         
         Enemy->SetActorHiddenInGame(true);
+    } 
+
+    FloorStartLocations.Empty();
+    FloorStartLocations.Reserve(EnemyActors.Num());
+    for (AActor* Floor : GimmickFloor)
+    {
+        if (!Floor) continue;
+
+
+        Floor->SetActorHiddenInGame(true);
+        Floor->SetActorEnableCollision(false);
+        Floor->SetActorTickEnabled(false);
+
+        FloorStartLocations.Add(Floor->GetActorLocation());
     }
 }
 
@@ -76,6 +91,66 @@ void AGimmickActor::Emerge()
 
     }
 
+}
+
+void AGimmickActor::Appear(AActor* Floor)
+{
+    if (!Floor) return;
+
+    Floor->SetActorHiddenInGame(false);
+    Floor->SetActorEnableCollision(true);
+}
+
+void AGimmickActor::Disappear(AActor* Floor)
+{
+    if (!Floor) return;
+
+    Floor->SetActorEnableCollision(false);
+    Floor->SetActorHiddenInGame(true);
+
+}
+
+void AGimmickActor::StartGimmick()
+{
+    CurrentIndex = 0;
+    ActiveFloors.Empty();
+
+    for (AActor* Floor : GimmickFloor)
+    {
+        if (Floor)
+        {
+            Disappear(Floor);
+        }
+    }
+
+    GetWorldTimerManager().SetTimer(
+        WaitTimerHandle,
+        this,
+        &AGimmickActor::UpdateGimmick,
+        SpawnTime,
+        true
+    );
+}
+
+void AGimmickActor::UpdateGimmick()
+{
+    if (CurrentIndex >= GimmickFloor.Num())
+    {
+        GetWorldTimerManager().ClearTimer(WaitTimerHandle);
+        return;
+    }
+
+    AActor* NewFloor = GimmickFloor[CurrentIndex];
+    Appear(NewFloor);
+    ActiveFloors.Add(NewFloor);
+
+    if (ActiveFloors.Num() > MaxActiveFloor)
+    {
+        Disappear(ActiveFloors[0]);
+        ActiveFloors.RemoveAt(0);
+    }
+
+    CurrentIndex++;
 }
 
 

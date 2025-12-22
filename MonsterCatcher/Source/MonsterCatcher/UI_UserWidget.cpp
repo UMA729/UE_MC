@@ -17,7 +17,17 @@ void UUI_UserWidget::SetKeyCount(int32 key_count)
 {
     if (KeyCount)
     {
-        KeyCount->SetText(FText::FromString(FString::Printf(TEXT("x%d"),key_count)));
+        KeyCount->SetText(FText::FromString(FString::Printf(TEXT("x%d"), key_count)));
+        if (key_count == 0)
+        {
+            KeyBackImg->SetFillColorAndOpacity(FLinearColor(0.1f, 0.1f, 0.1f, 0.1f)); 
+            KeyImg->SetRenderOpacity(0.25f);
+        }
+        else
+        {
+            KeyBackImg->SetFillColorAndOpacity(FLinearColor(0.5f, 0.75f, 0.f, 1.f));
+            KeyImg->SetRenderOpacity(1.0f);
+        }
     }
     else
     {

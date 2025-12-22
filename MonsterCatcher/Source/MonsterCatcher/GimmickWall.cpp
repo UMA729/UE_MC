@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "GimmickWall.h"
 #include "MyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "MyGameInstance.h"
-#include "GimmickWall.h"
 
 // Sets default values
 AGimmickWall::AGimmickWall()

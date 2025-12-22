@@ -288,7 +288,10 @@ void AMyCharacter::Tick(float DeltaTime)
 					}
 					else if (AGimmickActor* GimmickClass = Cast<AGimmickActor>(HitActor))
 					{
-						GimmickClass->Emerge();
+						if (!GimmickClass->isSpawnDest)
+							GimmickClass->Emerge();
+						else if (GimmickClass->isSpawnDest)
+							GimmickClass->StartGimmick();
 					}
 				}
 			}

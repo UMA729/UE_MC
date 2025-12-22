@@ -6,6 +6,7 @@
 #include "EnemyCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/PlayerController.h"
 #include "GameFramework/PlayerStart.h"
 
 AMyGameModeBase::AMyGameModeBase()
@@ -22,6 +23,12 @@ AMyGameModeBase::AMyGameModeBase()
 void AMyGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))
+	{
+		PC->SetInputMode(FInputModeGameOnly());
+		PC->SetShowMouseCursor(false);
+	}
 
 	const APlayerStart* PlayerStart = Cast<APlayerStart>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerStart::StaticClass()));
 	if (PlayerStart)

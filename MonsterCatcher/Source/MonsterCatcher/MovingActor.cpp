@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TimerManager.h" // ★絶対必要
 #include "MovingActor.h"
+#include "TimerManager.h" // ★絶対必要
 
 // Sets default values
 AMovingActor::AMovingActor()
