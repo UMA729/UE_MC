@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ThrowKnifeActor.h"
+#include "MyGameInstance.h"
 #include "GameFramework/Character.h"
 #include "Blueprint/UserWidget.h"
 #include "MyCharacter.generated.h"
@@ -109,6 +110,7 @@ public:
 
 	UUI_UserWidget* MainWidgetInstance;
 
+	UMyGameInstance* GameInstance;
 
 	// レイの現在位置（ケーブル先端）
 	FVector GrappleTip;
@@ -136,6 +138,7 @@ protected:
 	void StopGrapple(const FInputActionValue& Value);
 
 	void Fire(const FInputActionValue& Value);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -143,4 +146,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void KeyAdd();
+	void KeySub();
 };

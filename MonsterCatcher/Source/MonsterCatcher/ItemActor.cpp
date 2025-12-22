@@ -4,7 +4,6 @@
 #include "ItemActor.h"
 #include "GimmickWall.h"
 #include "MyCharacter.h"
-#include "MyGameInstance.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
@@ -40,6 +39,9 @@ void AItemActor::BeginPlay()
 	Super::BeginPlay();
 	
 	StartLocation = GetActorLocation();
+
+
+	//user_widget->SetKeyCount(GameInstance->keycount);
 }
 
 void AItemActor::Tick(float DeltaTime)
@@ -63,10 +65,8 @@ void AItemActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 
 	if (AMyCharacter* character = Cast<AMyCharacter>(OtherActor))
 	{
-		character->key_count++; // エフェクト
-		UMyGameInstance* GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
-		GameInstance->keycount++;
+		character->KeyAdd();
 
 		// インベントリ追加とかここに…
 

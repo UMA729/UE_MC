@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "UI_UserWidget.h"
+#include "MyGameInstance.h"
 #include "ItemActor.generated.h"
 
 UCLASS()
@@ -48,4 +50,6 @@ private:
 	// 回転パラメータ
 	UPROPERTY(EditAnywhere, Category = "Floating")
 	float RotationSpeed = 45.0f;   // 1秒あたりの回転角度（度）
+
+
 };

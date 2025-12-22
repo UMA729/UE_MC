@@ -2,6 +2,8 @@
 
 
 #include "MyCharacter.h"
+#include "Kismet/GameplayStatics.h"
+#include "MyGameInstance.h"
 #include "GimmickWall.h"
 
 // Sets default values
@@ -31,11 +33,13 @@ void AGimmickWall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 	{
 		if (AMyCharacter* character = Cast<AMyCharacter>(OtherActor))
 		{
-			if (character->key_count > 0)
+			UMyGameInstance* GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+			if (GameInstance->keycount > 0)
 			{
 				isHit = true;
 				isMoving = true;
-				character->key_count--;
+				character->KeySub();
 
 			}
 			else

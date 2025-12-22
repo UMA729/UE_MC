@@ -33,9 +33,24 @@ void AMyGameModeBase::BeginPlay()
 void AMyGameModeBase::KillPlayer(AMyCharacter* Player)
 {
 
-
 	//Player‚ğ”jŠü
 	Player->Destroy();
+
+	TArray<AActor*> Enemies;
+	UGameplayStatics::GetAllActorsOfClass(
+		GetWorld(),
+		AEnemyCharacter::StaticClass(),
+		Enemies
+	);
+
+	for (AActor* Actor : Enemies)
+	{
+		if (AEnemyCharacter* Enemy = Cast<AEnemyCharacter>(Actor))
+		{
+			Enemy->Reset();
+		}
+	}
+
 
 	//Respawn‚ğs‚¤
 	RespawnPlayer();

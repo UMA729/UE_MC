@@ -22,7 +22,11 @@ public:
 
     UPROPERTY(meta = (BindWidget))
     UTextBlock* KeyCount;
+    
+    UFUNCTION(BlueprintCallable)
+    void SetHPPercent(float percent);
 
     UFUNCTION(BlueprintCallable)
-    void SetHPPercent(float Percent);
+    void SetKeyCount(int32 key_count);
+
 };

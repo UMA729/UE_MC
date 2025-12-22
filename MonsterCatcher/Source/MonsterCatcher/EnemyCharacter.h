@@ -125,6 +125,8 @@ public:
 	//“GF€–S
 	void Die();
 
+	void Reset();
+
 	float rotate_speed;
 
 	bool isLooking;

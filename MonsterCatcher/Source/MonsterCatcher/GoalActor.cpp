@@ -37,7 +37,11 @@ void AGoalActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (isGimmickGoal&&GoalText)
+	if (!GoalText || !isGoal)
+	{
+		return;
+	}
+	else if (isGimmickGoal&&GoalText)
 		GoalText->SetActorHiddenInGame(true);
 	else
 		isGoal = true;
@@ -62,6 +66,11 @@ void AGoalActor::BeginPlay()
 void AGoalActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (!GoalText || !isGoal)
+	{
+		return;
+	}
 
 	if (GoalText && isGoal)
 	{

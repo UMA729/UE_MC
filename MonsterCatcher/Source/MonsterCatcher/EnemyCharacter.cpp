@@ -369,12 +369,15 @@ void AEnemyCharacter::OnHitOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 		{
 			if (AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
 			{
-				SetActorLocation(ori_pos);
-
 				GameMode->KillPlayer(CharacterClass);
-				bisAttacking = false;
-				isLooking = false;
 			}
 		}
 	}
+}
+
+void AEnemyCharacter::Reset()
+{
+	SetActorLocation(ori_pos);
+	bisAttacking = false;
+	isLooking = false;
 }

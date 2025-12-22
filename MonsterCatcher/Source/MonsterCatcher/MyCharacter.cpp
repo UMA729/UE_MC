@@ -12,6 +12,7 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "CableComponent.h"
@@ -79,6 +80,8 @@ void AMyCharacter::BeginPlay()
 
 	GetMesh()->HideBoneByName(FName("head"), EPhysBodyOp::PBO_None);
 
+	GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
 	if (UIWidgetClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("UIWiget"));
@@ -88,6 +91,7 @@ void AMyCharacter::BeginPlay()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Instance"));
 			MainWidgetInstance->AddToViewport();
+			MainWidgetInstance->SetKeyCount(GameInstance->keycount);
 		}
 	}
 	/*if (isPers)
@@ -411,6 +415,26 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		//EnhancedInputConponent->BindAction(GrappleAction, ETriggerEvent::Completed, this, &AMyCharacter::StopGrapple);			//ダッシュ停止
 
 
+	}
+}
+
+void AMyCharacter::KeyAdd()
+{
+	GameInstance->keycount++;
+
+	if (MainWidgetInstance)
+	{
+		MainWidgetInstance->SetKeyCount(GameInstance->keycount);
+	}
+}
+
+void AMyCharacter::KeySub()
+{
+	GameInstance->keycount--;
+
+	if (MainWidgetInstance)
+	{
+		MainWidgetInstance->SetKeyCount(GameInstance->keycount);
 	}
 }
 

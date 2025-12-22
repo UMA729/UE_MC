@@ -18,6 +18,6 @@ public:
 
 	void Initialize();
 
-	int32 keycount;
+	int32 keycount = 0;
 
 };
