@@ -112,7 +112,7 @@ void AEnemyCharacter::Tick(float DeltaTime)
 	{
 		return;
 	}
-	if (HP < 0)
+	if (HP <= 0)
 	{
 		Die();
 	}
