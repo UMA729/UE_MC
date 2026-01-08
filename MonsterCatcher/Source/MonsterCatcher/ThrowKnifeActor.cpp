@@ -10,35 +10,21 @@
 AThrowKnifeActor::AThrowKnifeActor()
 {
 
-	KunaiCollision = CreateDefaultSubobject<USphereComponent>(TEXT("ShereComp"));
-	KunaiCollision->InitSphereRadius(10.0f);
-	KunaiCollision->BodyInstance.SetCollisionProfileName("Projectile");
+	knife_collision = CreateDefaultSubobject<USphereComponent>(TEXT("ShereComp"));
+	knife_collision->InitSphereRadius(10.0f);
+	knife_collision->BodyInstance.SetCollisionProfileName("Projectile");
+	knife_collision->OnComponentHit.AddDynamic(this, &AThrowKnifeActor::OnHit);		// set up a notification for when this component hits something blocking
 
-	KunaiCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	KunaiCollision->SetCollisionObjectType(ECC_WorldDynamic);
+	knife_collision->CanCharacterStepUpOn = ECB_No;
 
-	// Hit ‚ðŽg‚¤‚½‚ß Pawn ‚ð Block ‚É‚·‚éiOverlap ‚Å‚Í Hit ‚Ío‚È‚¢j
-	KunaiCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
-	KunaiCollision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
-	KunaiCollision->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	RootComponent = knife_collision;
 
-	KunaiCollision->SetNotifyRigidBodyCollision(true); // OnHit ‚É•K{
-	KunaiCollision->SetGenerateOverlapEvents(false);   // Overlap ‚ÍŽg‚í‚È‚¢
-
-	// ‚·‚è”²‚¯–hŽ~ (‚‘¬Projectile‚É•K{)
-	KunaiCollision->BodyInstance.bUseCCD = true;
-
-
-	RootComponent = KunaiCollision;
-
-	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
-	ProjectileMovement->UpdatedComponent = KunaiCollision;
-	ProjectileMovement->InitialSpeed = 1500.f;
-	ProjectileMovement->MaxSpeed = 1500.f;
-	ProjectileMovement->bRotationFollowsVelocity = true;
-	ProjectileMovement->bShouldBounce = false;
-
-	KunaiCollision->OnComponentHit.AddDynamic(this, &AThrowKnifeActor::OnHit);		// set up a notification for when this component hits something blocking
+	projectile_movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
+	projectile_movement->UpdatedComponent = knife_collision;
+	projectile_movement->InitialSpeed = 1500.f;
+	projectile_movement->MaxSpeed = 1500.f;
+	projectile_movement->bRotationFollowsVelocity = true;
+	projectile_movement->bShouldBounce = false;
 
 	knife_damage = 50.f;
 

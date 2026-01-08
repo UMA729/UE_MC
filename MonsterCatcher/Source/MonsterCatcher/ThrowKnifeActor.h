@@ -16,10 +16,10 @@ class MONSTERCATCHER_API AThrowKnifeActor : public AActor
 
 	//ìäÇƒÇ´ïêäÌìñÇΩÇËîªíË
 	UPROPERTY(VisibleAnywhere, Category = ThrowWeapon, meta = (AllowPrivateAccess = "true"))
-	USphereComponent* KunaiCollision;
+	USphereComponent* knife_collision;
 	//
 	UPROPERTY(VisibleAnywhere, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	UProjectileMovementComponent* ProjectileMovement;
+	UProjectileMovementComponent* projectile_movement;
 
 private:
 	float knife_damage;
@@ -32,7 +32,7 @@ public:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
-	USphereComponent* GetCollisionComp()const { return KunaiCollision; }
+	USphereComponent* GetCollisionComp()const { return knife_collision; }
 	
-	UProjectileMovementComponent* GetProjectileMovement()const { return ProjectileMovement; }
+	UProjectileMovementComponent* GetProjectileMovement()const { return projectile_movement; }
 };

@@ -297,21 +297,34 @@ void AMyCharacter::Tick(float DeltaTime)
 			}
 			if (gHit && !bHasHitTarget)
 			{
-
 				GrappleCable->SetWorldLocation(CableStart);
 
-				GrappleAnchor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-
 				bHasHitTarget = true;
-				GrabPoint = GraHit.ImpactPoint;
-				GrappleAnchor->SetWorldLocation(GrabPoint);
-
-				TargetCableLength = FVector::Distance(GrappleStart, GrabPoint);
-				CurrentCableLength = TargetCableLength; // ピッタリの長さで固定
-
 				bIsFiringGrapple = false;
 				isGrappling = true;
 
+				// ヒットしたコンポーネント
+				USceneComponent* HitComp = GraHit.GetComponent();
+
+				if (HitComp && GrappleAnchor)
+				{
+					// いったんワールド位置を合わせる
+					GrappleAnchor->SetWorldLocation(GraHit.ImpactPoint);
+
+					// ★ここが核心：天井にアタッチ
+					GrappleAnchor->AttachToComponent(
+						HitComp,
+						FAttachmentTransformRules::KeepWorldTransform
+					);
+				}
+
+				// 初期ロープ長
+				CurrentCableLength = FVector::Distance(
+					GetActorLocation(),
+					GrappleAnchor->GetComponentLocation()
+				);
+
+				TargetCableLength = CurrentCableLength;
 				//UE_LOG(LogTemp, Warning, TEXT("Grapple Hit: %s"), *GrabPoint.ToString());
 			}
 
@@ -349,11 +362,12 @@ void AMyCharacter::Tick(float DeltaTime)
 			);
 
 			FVector ActorLoc = GetActorLocation();
-			FVector ToAnchor = GrabPoint - ActorLoc;
+			FVector AnchorLoc = GrappleAnchor->GetComponentLocation();
+			FVector ToAnchor = AnchorLoc - ActorLoc;
 			float DistanceToAnchor = ToAnchor.Size();
 			FVector RopeDir = ToAnchor.GetSafeNormal();
 
-			FVector CorrectedPos = GrabPoint - RopeDir * CurrentCableLength;
+			FVector CorrectedPos = AnchorLoc - RopeDir * CurrentCableLength;
 			FVector Correction = CorrectedPos - ActorLoc;
 
 			GetCharacterMovement()->AddForce(Correction * 900.f);
@@ -369,10 +383,12 @@ void AMyCharacter::Tick(float DeltaTime)
 	// 振り子物理処理 実験
 	//if (isGrappling)
 	//{
-	//	FVector ActorLoc = GetActorLocation();
-	//	FVector ToAnchor = GrabPoint - ActorLoc;
-	//	float dDistanceToAnchor = ToAnchor.Size();
-	//	FVector RopeDir = ToAnchor.GetSafeNormal();
+	// 
+	//FVector ActorLoc = GetActorLocation();
+	//FVector AnchorLoc = GrappleAnchor->GetComponentLocation();
+	//FVector ToAnchor = AnchorLoc - ActorLoc;
+	//float DistanceToAnchor = ToAnchor.Size();
+	//FVector RopeDir = ToAnchor.GetSafeNormal();
 
 	//	// ロープの長さを常に現在の距離に追従させる
 	//	CurrentCableLength = DistanceToAnchor;
