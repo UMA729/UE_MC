@@ -1,0 +1,13 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\unrealeditor\\inc\\test_rigproject\\uht\\test_rigproject.init.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\x64\\test_rigprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\test_rigproject\\definitions.test_rigproject.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

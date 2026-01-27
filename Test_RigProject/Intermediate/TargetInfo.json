@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "Test_RigProject",
+			"Path": "..\\Source\\Test_RigProject.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "Test_RigProjectEditor",
+			"Path": "..\\Source\\Test_RigProjectEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

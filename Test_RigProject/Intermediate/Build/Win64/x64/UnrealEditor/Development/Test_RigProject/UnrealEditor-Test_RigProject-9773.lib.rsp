@@ -1,0 +1,16 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-Test_RigProject-9773.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:\Users\GA2B\Desktop\Test_RigProject\Intermediate\Build\Win64\x64\Test_RigProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"C:\Users\GA2B\Desktop\Test_RigProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\Test_RigProject\MyPawn.gen.cpp.obj"
+"C:\Users\GA2B\Desktop\Test_RigProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\Test_RigProject\Test_RigProject.init.gen.cpp.obj"
+"C:\Users\GA2B\Desktop\Test_RigProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\Test_RigProject\MyPawn.cpp.obj"
+"C:\Users\GA2B\Desktop\Test_RigProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\Test_RigProject\Test_RigProject.cpp.obj"
+"C:\Users\GA2B\Desktop\Test_RigProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\Test_RigProject\PerModuleInline.gen.cpp.obj"
+"C:\Users\GA2B\Desktop\Test_RigProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\Test_RigProject\Default.rc2.res"
+/OUT:"C:\Users\GA2B\Desktop\Test_RigProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\Test_RigProject\UnrealEditor-Test_RigProject-9773.lib"

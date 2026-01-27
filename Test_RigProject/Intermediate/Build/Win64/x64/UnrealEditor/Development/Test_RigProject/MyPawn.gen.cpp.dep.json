@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\unrealeditor\\inc\\test_rigproject\\uht\\mypawn.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\x64\\test_rigprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\test_rigproject\\definitions.test_rigproject.h",
+            "c:\\users\\ga2b\\desktop\\test_rigproject\\source\\test_rigproject\\mypawn.h",
+            "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\unrealeditor\\inc\\test_rigproject\\uht\\mypawn.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

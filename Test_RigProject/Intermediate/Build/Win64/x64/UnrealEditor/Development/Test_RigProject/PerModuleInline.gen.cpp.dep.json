@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\test_rigproject\\permoduleinline.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\x64\\test_rigprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\ga2b\\desktop\\test_rigproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\test_rigproject\\definitions.test_rigproject.h",
+            "c:\\program files\\epic games\\ue_5.5\\engine\\source\\runtime\\core\\public\\hal\\permoduleinline.inl"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

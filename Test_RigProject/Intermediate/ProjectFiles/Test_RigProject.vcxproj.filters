@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\Test_RigProject.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\Test_RigProject.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\Test_RigProjectEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\.vsconfig" />
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\Test_RigProject">
+      <UniqueIdentifier>{52BE048A-0C01-3CA1-A154-3D24C2F92E76}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Test_RigProject\MyPawn.cpp">
+      <Filter>Source\Test_RigProject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Test_RigProject\MyPawn.h">
+      <Filter>Source\Test_RigProject</Filter>
+    </ClCompile>
+    <None Include="..\..\Source\Test_RigProject\Test_RigProject.Build.cs">
+      <Filter>Source\Test_RigProject</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\Test_RigProject\Test_RigProject.cpp">
+      <Filter>Source\Test_RigProject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Test_RigProject\Test_RigProject.h">
+      <Filter>Source\Test_RigProject</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
